@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-
+<html>
 <head>
 </head>
+<body>
 <div ng-controller="getLocation" data-ng-init="init()">
 
     <div class="row">
@@ -35,7 +36,7 @@
 
             <!--<div class="col-md-1"></div>-->
             <div class="col-md-1">
-                <button type="button" class="btn btn-primary" ng-click="search()">Apply</button>
+                <button type="submit" class="btn btn-primary active" ng-click="search()">Apply</button>
             </div>
         </form>
 
@@ -50,7 +51,7 @@
         <!-- <td> {{ event.latitude }}  </td>
                         <td> {{ event.longitude }}  </td>-->
         <!-- <div class="col-md-1"></div>-->
-        <div class="col-md-6" style="max-height: 450px; overflow: auto;" id="eventList">
+        <div scrollend class="col-md-6" style="max-height: 500px; overflow: auto; overflow-y: scroll; padding-right: 0px;" id="eventList">
             <table class="table table-hover table-condensed" style="margin-bottom: 0px;">
                 <!--<tr>
                     <th colspan="4"></th>
@@ -59,33 +60,37 @@
                     <th>When?</th>
                 </tr>-->
                 <tr ng-repeat="event in eventDetails" ng-click="showEvent(event)">
-                    <td style="width: 25%">
-                        <div><img ng-src="{{event.image}}" /></div>
+                    <td style="width: 22%; padding: 0px;">
+                        <div><img ng-src="{{event.image}}" title="{{event.desc}}" /></div>
                     </td>
-                    <td style="width: 75%">
-                        <h4> <a href=""> {{ event.title }} </a></h4>
-                        <div><i class="fa fa-location-arrow"></i> &nbsp; {{ event.venue_name }}</div>
-                        <div>
-                            <span> <i class="fa fa-calendar"></i> &nbsp; {{ event.start_time | dateInMillis | date: 'EEE, MMM dd yyyy, h:mm a'}} </span>
-                            <span style="padding-left: 200px;">
+                    <td style="width: 78%; padding: 0px;">
+                        <div style="position: relative;">
+                            <div class="titleWidth" style="padding-top: 10px; padding-bottom: 2px; font-size: larger;" title="{{event.title}}"><strong> <a href="" ng-click="showEvent(event)"> {{ event.title }} </a> </strong></div>
+                            <div>
+                                <span class="venueWidth" title="{{event.venue_name}}"><i class="fa fa-location-arrow"></i> &nbsp; {{ event.venue_name }}</span>
+                                <span class="timeWidth" title="{{event.start_time}}"><i class="fa fa-calendar"></i> &nbsp; {{ event.start_time | dateInMillis | date: 'EEE, MMM dd yyyy, h:mm a'}}</span>
+                            </div>
+                            <div style="position: absolute; top: 80px; left: 385px;">
                                 <span><a href=""><i class="fa fa-thumbs-o-up fa-2x"></i></a></span>
                                 &nbsp;&nbsp;&nbsp;
                                 <span><a href=""><i class="fa fa-thumbs-o-down fa-2x"></i></a></span>
-                            </span>
+                            </div>
+                            <div style="padding-top: 5px;"><span class="label label-success costWidth" title="{{event.price}}"> {{event.price}} </span></div>
+                            <div style="width: 75%;"><span ng-repeat="cat in event.categories"><span class="label label-primary">{{cat.name | ampersand}}</span>   </span></div>
                         </div>
-                        <div style="padding-top: 5px;"><span class="label label-success"> {{event.price}} </span></div>
-                        <div><span ng-repeat="cat in event.categories"><span class="label label-primary">{{cat.name | ampersand}}</span>   </span></div>
                     </td>
                     <!--<td style="width: 30%"> <br> <span> Where: {{ event.venue_name }} <hr style="margin-top: 10px; margin-bottom: 10px;"> {{ event.start_time }} </span> </td>-->
                 </tr>
-                <!--<tr>
-                    <td style="width: 30%"> <h5> {{ event.start_time }} </h5> </td>
-                </tr>-->
+                <tr>
+                    <td colspan="2" style="text-align: center;">
+                        <div ng-show="!loader"><i class="fa fa-spin fa-spinner fa-2x" style="color: deepskyblue;"></i><!--<i class="fa fa-arrow-circle-o-down fa-2x"></i> &nbsp; More &nbsp; <i class="fa fa-arrow-circle-o-down fa-2x"></i>--></div>
+                    </td>
+                </tr>
             </table>
         </div>
 
-        <div class="col-md-6" id="map" map-lazy-load="http://maps.google.com/maps/api/js">
-            <ng-map center="{{where}}" zoom="10" style="height: 450px">
+        <div class="col-md-6" id="map" style="padding-right: 0px;" map-lazy-load="http://maps.google.com/maps/api/js">
+            <ng-map center="{{where}}" zoom="10" style="height: 500px">
                 <marker position = "{{e.latitude}},{{e.longitude}}"
                         ng-repeat="e in eventDetails"
                         on-click="clickEventInfo(event,e)">
@@ -120,4 +125,47 @@
            </div> -->
 
     </div>
+
+    <div id="loader" ng-show="loader">
+        <!--<i class="fa fa-spin fa-refresh fa-5x" style="position: fixed;
+    left: 25%;
+    top: 50%;
+    z-index: 9999;"></i>-->
+        <div class="ball"></div>
+    </div>
+
+   <!-- <div>
+        &lt;!&ndash;Create event detail page here&ndash;&gt;
+        <table class="table">
+            <tr>
+                <td style="width: 25%; text-align: center;">
+                    <div><img ng-src="{{clickedEvent.image}}" /></div>
+                </td>
+                <td style="width: 75%">
+                    <div style="position: relative;">
+                        <div style="padding-top: 10px; padding-bottom: 2px; font-size: larger;" title="{{clickedEvent.title}}"><strong> {{ clickedEvent.title }} </strong></div>
+                        <div>
+                            <span class="venueWidth" title="{{clickedEvent.venue_name}}"><i class="fa fa-location-arrow"></i> &nbsp; {{ clickedEvent.venue_name }}</span>
+                            <span title="{{clickedEvent.start_time}}"><i class="fa fa-calendar"></i> &nbsp; {{ clickedEvent.start_time | dateInMillis | date: 'EEE, MMM dd yyyy, h:mm a'}}</span>
+                        </div>
+                        <div style="padding-top: 5px;"><span class="label label-success costWidth" title="{{clickedEvent.price}}"> {{clickedEvent.price}} </span></div>
+                        <div><span ng-repeat="cat in clickedEvent.categories"><span class="label label-primary">{{cat.name | ampersand}}</span>   </span></div>
+                        <div style="position: absolute; left: 380px; top: 75px;">
+                            <span><a href=""><i class="fa fa-thumbs-o-up fa-2x"></i></a></span>
+                            &nbsp;&nbsp;&nbsp;
+                            <span><a href=""><i class="fa fa-thumbs-o-down fa-2x"></i></a></span>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" style="text-align: center;">
+                    <div>Description: {{clickedEvent.desc}}</div>
+                </td>
+            </tr>
+        </table>
+    </div>-->
+
 </div>
+</body>
+</html>
