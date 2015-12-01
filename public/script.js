@@ -44,6 +44,9 @@ scotchApp.controller('getLocation', function ($scope, $http, NgMap) {
 
     //google.maps.event.trigger(map, "resize");
     $scope.gPlace,
+        $scope.searchKeyword = "",
+        $scope.keyword = "",
+        $scope.range = 10,
         $scope.eventDetails = [],
         $scope.busy = false,
         $scope.loader = true,
@@ -52,6 +55,7 @@ scotchApp.controller('getLocation', function ($scope, $http, NgMap) {
         $scope.userlat = "0",
         $scope.userlong = "0",
         $scope.error = "",
+        $scope.showErr = false,
         $scope.visibility = false,
         $scope.searchQuery = "",
         $scope.category = "",
@@ -69,7 +73,9 @@ scotchApp.controller('getLocation', function ($scope, $http, NgMap) {
             navigator.geolocation.getCurrentPosition($scope.showPosition, $scope.showError);
         }
         else {
+            $scope.loader = false;
             $scope.error = "Geolocation is not supported by this browser";
+            $scope.showErr = true;
         }
     };
 
@@ -92,6 +98,8 @@ scotchApp.controller('getLocation', function ($scope, $http, NgMap) {
             $scope.categoriesData = data;
             //alert(JSON.stringify($scope.categoriesData));
         }).error(function (error) {
+            $scope.error = "Error fetching categories. Please refresh the page...";
+            $scope.showErr = true;
         });
     };
 
@@ -100,6 +108,8 @@ scotchApp.controller('getLocation', function ($scope, $http, NgMap) {
     };
 
     $scope.showError = function (error) {
+        $scope.loader = false;
+        $scope.showErr = true;
         switch (error.code) {
             case error.PERMISSION_DENIED:
                 $scope.error = "User denied the request for Geolocation.";
@@ -134,11 +144,35 @@ scotchApp.controller('getLocation', function ($scope, $http, NgMap) {
 
     $scope.search = function () {
         //alert("searching..");
-        $scope.where = $scope.searchQuery;
-        if($scope.where == "")
+        $scope.showErr = false;
+        $scope.eventDetails.splice(0, $scope.eventDetails.length);
+        //alert($scope.searchQuery);
+        if($scope.searchQuery != ""){
+            $http.get('http://maps.google.com/maps/api/geocode/json?address=' +$scope.searchQuery).success(function(mapData) {
+                //alert(JSON.stringify(mapData.results[0].geometry.location));
+                if(mapData.results.length!=0) {
+                    $scope.where = mapData.results[0].geometry.location.lat + "," + mapData.results[0].geometry.location.lng;
+                }
+                else{
+                    $scope.error = "Could not find entered location";
+                    $scope.showErr = true;
+                    return;
+                    //alert("Could not find entered location");
+                }
+            }.error(function (error){
+                $scope.error = "Could not find entered location";
+                $scope.showErr = true;
+            }));
+        }
+        else if($scope.searchKeyword != ""){
+            $scope.keyword = "title:"+$scope.searchKeyword;
+            $scope.sortOrder = "Relevance";
+        }
+        else
+        {
             $scope.where = $scope.userlat + "," + $scope.userlong;
+        }
 
-        $scope.eventDetails.length = 0;
         $scope.pageNo = 1;
         $scope.loader = true;
         if($scope.category == null)
@@ -147,25 +181,38 @@ scotchApp.controller('getLocation', function ($scope, $http, NgMap) {
         //$scope.url = "http://api.eventful.com/json/events/search?app_key=" + $scope.apiKey + "&category=" + $scope.category.id + "&where=" + $scope.where + "&within=10&units=mi&date=Future&page_size=50&include=categories,price,links&sort_order=" + $scope.sortOrder;
         //alert($scope.url);
         $scope.show();
+        if($scope.eventDetails.length == 0){
+            $scope.error = "No events found!";
+            $scope.showErr = true;
+            return;
+        }
     };
 
     $scope.more = function(){
         //alert($scope.pageNo + " " + $scope.pageCount);
+        $scope.showErr = false;
+        if($scope.eventDetails.length == 0){
+            $scope.error = "No events found!";
+            $scope.showErr = true;
+            return;
+        }
         if($scope.pageNo<$scope.pageCount){
             //alert($scope.pageNo + " " + $scope.pageCount);
             if($scope.busy) return;
-            $scope.pageNo = $scope.pageNo + 1;
             $scope.busy = true;
+            $scope.pageNo = $scope.pageNo + 1;
             $scope.show();
         }
     };
 
     $scope.show = function () {
+        $scope.showErr = false;
         //$scope.loader = true;
         $scope.visibility = true;
         //$scope.eventDetails = [];
         //alert($scope.pageNo);
-        $scope.url = "http://api.eventful.com/json/events/search?app_key=" + $scope.apiKey + "&category=" + $scope.category.id + "&where=" + $scope.where + "&within=10&units=mi&date=Future&page_size=10&page_number=" + $scope.pageNo + "&include=categories,price,links&sort_order=" + $scope.sortOrder;
+        $scope.url = "http://api.eventful.com/json/events/search?app_key=" + $scope.apiKey + "&keywords=" + $scope.keyword + "&category=" + $scope.category.id + "&where=" + $scope.where + "&within="+ $scope.range + "&units=mi&date=Future&page_size=10&page_number=" + $scope.pageNo + "&include=categories,price,links&sort_order=" + $scope.sortOrder;
+        //console.log($scope.url);
         $http.get($scope.url).success(function (data, status, headers, config) {
 
             $scope.eventData = data;
@@ -176,13 +223,18 @@ scotchApp.controller('getLocation', function ($scope, $http, NgMap) {
             //alert($scope.eventData.events.event.length);
             //  for(var i=1; i<$scope.eventData.page_count;i++)
             //  {
+            /*if($scope.eventData.events == null){
+                $scope.error = "No events found!";
+                return;
+            }*/
+
             for (var j = 0; j < $scope.eventData.events.event.length; j++) {
                 var eventObj = new Object();
                 eventObj.url = $scope.eventData.events.event[j].url;
                 eventObj.title = $scope.eventData.events.event[j].title;
                 eventObj.desc = $scope.eventData.events.event[j].description;
                 if(eventObj.desc == null)
-                    eventObj.desc = "There is no description for this event."
+                    eventObj.desc = "There is no description for this event.";
                 eventObj.start_time = $scope.eventData.events.event[j].start_time;
                 eventObj.stop_time = $scope.eventData.events.event[j].stop_time;
                 eventObj.venue_name = $scope.eventData.events.event[j].venue_name;
@@ -203,9 +255,12 @@ scotchApp.controller('getLocation', function ($scope, $http, NgMap) {
                 $scope.eventDetails.push(eventObj);
             }
             //  }
+            //alert($scope.eventDetails.length);
             $scope.busy = false;
             $scope.loader = false;
         }).error(function (error) {
+            $scope.error = "Unexpected error. Could not fetch events data.."
+            $scope.showErr = true;
         });
     };
 

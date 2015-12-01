@@ -4,22 +4,38 @@
 </head>
 <body>
 <div ng-controller="getLocation" data-ng-init="init()">
+    <form class="form-inline">
+        <div class="row">
 
-    <div class="row">
-        <form class="form-inline">
-            <div class="col-md-1"></div>
-            <div class="col-md-3">
-                <label>Filter: </label>
+            <div class="col-md-6">
+                &nbsp;<label>Search:</label>
+                <input type="text" class="form-control" ng-model="searchKeyword" placeholder="Enter event keywords" style="width: 75%;">
+                <button type="button" class="btn btn-primary active" ng-click="search()" style="width: 15%;">Find</button>
+            </div>
+            <div class="col-md-6">
+                <div class="input-group" style="width: 60%">
+                    <!--<div class="input-group-addon">Location</div>-->
+                    <input type="text" googleplace class="form-control" ng-model="searchQuery" placeholder="Change location">
+                </div>
+                <!--</div>
+                <div class="col-md-1">-->
+                <!--<label>Range: </label>-->
+                <label>Radius:</label>
+                <input type="text" class="form-control" ng-model="range" style="width: 10%">&nbsp;miles
+                <button type="button" class="btn btn-primary active" ng-click="search()" style="width: 14%;">Apply</button>
+            </div>
+        </div>
+        <div class="row" style="padding-top: 1%;">
+            <div class="col-md-6">
+                &nbsp;<label>Filter: </label>&nbsp;&nbsp;
                 <select name="categorySelect" id="categorySelect" class="form-control"
                         ng-options="cat.name | ampersand for cat in categoriesData.category track by cat.id"
                         ng-model="category"
                         ng-change="search()">
                     <option value="">-- Select Category --</option>
                 </select>
-            </div>
-            <!--<div class="col-md-1"></div>-->
-            <div class="col-md-2">
-                <label>Sort by: </label>
+                <!--<div class="col-md-1"></div>-->
+                <label style="padding-left: 13%;">Sort by: </label>
                 <select name="sorting" id="sorting" class="form-control"
                         ng-options="type for type in sortOptions track by type"
                         ng-model="sortOrder"
@@ -27,20 +43,11 @@
                     <option value="Popularity">-- sort by --</option>
                 </select>
             </div>
-            <div class="col-md-5">
-                <div class="input-group" style="width: 100%">
-                    <!--<div class="input-group-addon">Location</div>-->
-                    <input type="text" googleplace class="form-control" ng-model="searchQuery" placeholder="Change location">
-                </div>
+            <div class="col-md-6" style="text-align: center; padding-top: 20px; color: lightskyblue;">
+                <label>Please click on the marker to view event details...</label>
             </div>
-
-            <!--<div class="col-md-1"></div>-->
-            <div class="col-md-1">
-                <button type="submit" class="btn btn-primary active" ng-click="search()">Apply</button>
-            </div>
-        </form>
-
-    </div>
+        </div>
+    </form>
     <br>
     <div class="row">
 
@@ -51,7 +58,7 @@
         <!-- <td> {{ event.latitude }}  </td>
                         <td> {{ event.longitude }}  </td>-->
         <!-- <div class="col-md-1"></div>-->
-        <div scrollend class="col-md-6" style="max-height: 500px; overflow: auto; overflow-y: scroll; padding-right: 0px;" id="eventList">
+        <div scrollend class="col-md-6" style="max-height: 450px; overflow: auto; overflow-y: scroll; padding-right: 0px;" id="eventList">
             <table class="table table-hover table-condensed" style="margin-bottom: 0px;">
                 <!--<tr>
                     <th colspan="4"></th>
@@ -59,9 +66,9 @@
                     <th>Where?</th>
                     <th>When?</th>
                 </tr>-->
-                <tr ng-repeat="event in eventDetails" ng-click="showEvent(event)">
+                <tr ng-repeat="event in eventDetails">
                     <td style="width: 22%; padding: 0px;">
-                        <div><img ng-src="{{event.image}}" title="{{event.desc}}" /></div>
+                        <div><img ng-src="{{event.image}}" /></div>
                     </td>
                     <td style="width: 78%; padding: 0px;">
                         <div style="position: relative;">
@@ -83,14 +90,14 @@
                 </tr>
                 <tr>
                     <td colspan="2" style="text-align: center;">
-                        <div ng-show="!loader"><i class="fa fa-spin fa-spinner fa-2x" style="color: deepskyblue;"></i><!--<i class="fa fa-arrow-circle-o-down fa-2x"></i> &nbsp; More &nbsp; <i class="fa fa-arrow-circle-o-down fa-2x"></i>--></div>
+                        <div ng-show="busy"><i class="fa fa-spin fa-spinner fa-2x" style="color: deepskyblue;"></i><!--<i class="fa fa-arrow-circle-o-down fa-2x"></i> &nbsp; More &nbsp; <i class="fa fa-arrow-circle-o-down fa-2x"></i>--></div>
                     </td>
                 </tr>
             </table>
         </div>
 
         <div class="col-md-6" id="map" style="padding-right: 0px;" map-lazy-load="http://maps.google.com/maps/api/js">
-            <ng-map center="{{where}}" zoom="10" style="height: 500px">
+            <ng-map center="{{where}}" zoom="10" style="height: 450px;">
                 <marker position = "{{e.latitude}},{{e.longitude}}"
                         ng-repeat="e in eventDetails"
                         on-click="clickEventInfo(event,e)">
@@ -134,36 +141,39 @@
         <div class="ball"></div>
     </div>
 
-   <!-- <div>
-        &lt;!&ndash;Create event detail page here&ndash;&gt;
-        <table class="table">
-            <tr>
-                <td style="width: 25%; text-align: center;">
-                    <div><img ng-src="{{clickedEvent.image}}" /></div>
-                </td>
-                <td style="width: 75%">
-                    <div style="position: relative;">
-                        <div style="padding-top: 10px; padding-bottom: 2px; font-size: larger;" title="{{clickedEvent.title}}"><strong> {{ clickedEvent.title }} </strong></div>
-                        <div>
-                            <span class="venueWidth" title="{{clickedEvent.venue_name}}"><i class="fa fa-location-arrow"></i> &nbsp; {{ clickedEvent.venue_name }}</span>
-                            <span title="{{clickedEvent.start_time}}"><i class="fa fa-calendar"></i> &nbsp; {{ clickedEvent.start_time | dateInMillis | date: 'EEE, MMM dd yyyy, h:mm a'}}</span>
-                        </div>
-                        <div style="padding-top: 5px;"><span class="label label-success costWidth" title="{{clickedEvent.price}}"> {{clickedEvent.price}} </span></div>
-                        <div><span ng-repeat="cat in clickedEvent.categories"><span class="label label-primary">{{cat.name | ampersand}}</span>   </span></div>
-                        <div style="position: absolute; left: 380px; top: 75px;">
-                            <span><a href=""><i class="fa fa-thumbs-o-up fa-2x"></i></a></span>
-                            &nbsp;&nbsp;&nbsp;
-                            <span><a href=""><i class="fa fa-thumbs-o-down fa-2x"></i></a></span>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2" style="text-align: center;">
-                    <div>Description: {{clickedEvent.desc}}</div>
-                </td>
-            </tr>
-        </table>
+    <!-- <div>
+         &lt;!&ndash;Create event detail page here&ndash;&gt;
+         <table class="table">
+             <tr>
+                 <td style="width: 25%; text-align: center;">
+                     <div><img ng-src="{{clickedEvent.image}}" /></div>
+                 </td>
+                 <td style="width: 75%">
+                     <div style="position: relative;">
+                         <div style="padding-top: 10px; padding-bottom: 2px; font-size: larger;" title="{{clickedEvent.title}}"><strong> {{ clickedEvent.title }} </strong></div>
+                         <div>
+                             <span class="venueWidth" title="{{clickedEvent.venue_name}}"><i class="fa fa-location-arrow"></i> &nbsp; {{ clickedEvent.venue_name }}</span>
+                             <span title="{{clickedEvent.start_time}}"><i class="fa fa-calendar"></i> &nbsp; {{ clickedEvent.start_time | dateInMillis | date: 'EEE, MMM dd yyyy, h:mm a'}}</span>
+                         </div>
+                         <div style="padding-top: 5px;"><span class="label label-success costWidth" title="{{clickedEvent.price}}"> {{clickedEvent.price}} </span></div>
+                         <div><span ng-repeat="cat in clickedEvent.categories"><span class="label label-primary">{{cat.name | ampersand}}</span>   </span></div>
+                         <div style="position: absolute; left: 380px; top: 75px;">
+                             <span><a href=""><i class="fa fa-thumbs-o-up fa-2x"></i></a></span>
+                             &nbsp;&nbsp;&nbsp;
+                             <span><a href=""><i class="fa fa-thumbs-o-down fa-2x"></i></a></span>
+                         </div>
+                     </div>
+                 </td>
+             </tr>
+             <tr>
+                 <td colspan="2" style="text-align: center;">
+                     <div>Description: {{clickedEvent.desc}}</div>
+                 </td>
+             </tr>
+         </table>
+     </div>-->
+    <!--<div style="color: lightskyblue; position: absolute; left: 17%; top: 60%;" ng-show=showErr>
+        <h2>{{error}}</h2>
     </div>-->
 
 </div>
