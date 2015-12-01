@@ -232,38 +232,66 @@ scotchApp.controller('getLocation', function ($scope, $http, NgMap) {
                 return;
             }
 
-            for (var j = 0; j < $scope.eventData.events.event.length; j++) {
+            if($scope.eventData.total_items == 1){
                 var eventObj = new Object();
-                eventObj.url = $scope.eventData.events.event[j].url;
-                eventObj.title = $scope.eventData.events.event[j].title;
-                eventObj.desc = $scope.eventData.events.event[j].description;
+                eventObj.url = $scope.eventData.events.event.url;
+                eventObj.title = $scope.eventData.events.event.title;
+                eventObj.desc = $scope.eventData.events.event.description;
                 if(eventObj.desc == null)
                     eventObj.desc = "There is no description for this event.";
-                eventObj.start_time = $scope.eventData.events.event[j].start_time;
-                eventObj.stop_time = $scope.eventData.events.event[j].stop_time;
-                eventObj.venue_name = $scope.eventData.events.event[j].venue_name;
-                eventObj.venue_address = $scope.eventData.events.event[j].venue_address;
-                eventObj.city = $scope.eventData.events.event[j].city_name;
-                eventObj.latitude = $scope.eventData.events.event[j].latitude;
-                eventObj.longitude = $scope.eventData.events.event[j].longitude;
+                eventObj.start_time = $scope.eventData.events.event.start_time;
+                eventObj.stop_time = $scope.eventData.events.event.stop_time;
+                eventObj.venue_name = $scope.eventData.events.event.venue_name;
+                eventObj.venue_address = $scope.eventData.events.event.venue_address;
+                eventObj.city = $scope.eventData.events.event.city_name;
+                eventObj.latitude = $scope.eventData.events.event.latitude;
+                eventObj.longitude = $scope.eventData.events.event.longitude;
                 eventObj.image = "images/default_image.png";
                 eventObj.price = "Free";
-                if($scope.eventData.events.event[j].price != null){
-                    eventObj.price = "$ " + $scope.eventData.events.event[j].price;
+                if($scope.eventData.events.event.price != null){
+                    eventObj.price = "$ " + $scope.eventData.events.event.price;
                 }
-                if ($scope.eventData.events.event[j].image != null) {
-                    eventObj.image = $scope.eventData.events.event[j].image.medium.url;
+                if ($scope.eventData.events.event.image != null) {
+                    eventObj.image = $scope.eventData.events.event.image.medium.url;
                 }
-                eventObj.categories = $scope.eventData.events.event[j].categories.category;
+                eventObj.categories = $scope.eventData.events.event.categories.category;
 
                 $scope.eventDetails.push(eventObj);
+            }
+            else {
+                for (var j = 0; j < $scope.eventData.events.event.length; j++) {
+                    var eventObj = new Object();
+                    eventObj.url = $scope.eventData.events.event[j].url;
+                    eventObj.title = $scope.eventData.events.event[j].title;
+                    eventObj.desc = $scope.eventData.events.event[j].description;
+                    if (eventObj.desc == null)
+                        eventObj.desc = "There is no description for this event.";
+                    eventObj.start_time = $scope.eventData.events.event[j].start_time;
+                    eventObj.stop_time = $scope.eventData.events.event[j].stop_time;
+                    eventObj.venue_name = $scope.eventData.events.event[j].venue_name;
+                    eventObj.venue_address = $scope.eventData.events.event[j].venue_address;
+                    eventObj.city = $scope.eventData.events.event[j].city_name;
+                    eventObj.latitude = $scope.eventData.events.event[j].latitude;
+                    eventObj.longitude = $scope.eventData.events.event[j].longitude;
+                    eventObj.image = "images/default_image.png";
+                    eventObj.price = "Free";
+                    if ($scope.eventData.events.event[j].price != null) {
+                        eventObj.price = "$ " + $scope.eventData.events.event[j].price;
+                    }
+                    if ($scope.eventData.events.event[j].image != null) {
+                        eventObj.image = $scope.eventData.events.event[j].image.medium.url;
+                    }
+                    eventObj.categories = $scope.eventData.events.event[j].categories.category;
+
+                    $scope.eventDetails.push(eventObj);
+                }
             }
             //  }
             //alert($scope.eventDetails.length);
             $scope.busy = false;
             $scope.loader = false;
         }).error(function (error) {
-            $scope.error = "Unexpected error. Could not fetch events data.."
+            $scope.error = "Unexpected error. Could not fetch events data..";
             $scope.showErr = true;
         });
     };
