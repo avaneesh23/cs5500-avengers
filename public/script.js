@@ -223,10 +223,12 @@ scotchApp.controller('getLocation', function ($scope, $http, NgMap) {
             //alert($scope.eventData.events.event.length);
             //  for(var i=1; i<$scope.eventData.page_count;i++)
             //  {
-            /*if($scope.eventData.events == null){
+            if($scope.eventData.events == null){
                 $scope.error = "No events found!";
+                $scope.loader = false;
+                $scope.showErr = true;
                 return;
-            }*/
+            }
 
             for (var j = 0; j < $scope.eventData.events.event.length; j++) {
                 var eventObj = new Object();
