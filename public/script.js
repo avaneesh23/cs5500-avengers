@@ -177,6 +177,8 @@ scotchApp.controller('getLocation', function ($scope, $http, NgMap) {
         $scope.loader = true;
         if($scope.category == null)
             $scope.category = "";
+        if($scope.range == "")
+            $scope.range = 10;
         //alert(typeof $scope.searchQuery);
         //$scope.url = "http://api.eventful.com/json/events/search?app_key=" + $scope.apiKey + "&category=" + $scope.category.id + "&where=" + $scope.where + "&within=10&units=mi&date=Future&page_size=50&include=categories,price,links&sort_order=" + $scope.sortOrder;
         //alert($scope.url);
