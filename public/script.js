@@ -159,10 +159,10 @@ scotchApp.controller('getLocation', function ($scope, $http, NgMap) {
                     return;
                     //alert("Could not find entered location");
                 }
-            }.error(function (error){
+            }).error(function (error){
                 $scope.error = "Could not find entered location";
                 $scope.showErr = true;
-            }));
+            });
         }
         else if($scope.searchKeyword != ""){
             $scope.keyword = "title:"+$scope.searchKeyword;
