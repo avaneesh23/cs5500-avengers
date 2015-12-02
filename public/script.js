@@ -144,50 +144,60 @@ scotchApp.controller('getLocation', function ($scope, $http, NgMap) {
 
     $scope.search = function () {
         //alert("searching..");
+        //alert($scope.searchKeyword);
         $scope.showErr = false;
-        $scope.eventDetails.splice(0, $scope.eventDetails.length);
+        /*$scope.eventDetails.splice(0, $scope.eventDetails.length);
+        $scope.eventDetails.length = 0;*/
+        $scope.eventDetails = [];
+        debugger;
         //alert($scope.searchQuery);
+
+        if($scope.searchKeyword != ""){
+            //alert("here");
+            $scope.keyword = "title:"+$scope.searchKeyword;
+            $scope.sortOrder = "Relevance";
+        }
+        else{
+            $scope.keyword = "";
+            $scope.sortOrder = "Popularity";
+        }
+
+        $scope.pageNo = 1;
+        $scope.loader = true;
+
+        $scope.category = $scope.category == null? "" : $scope.category;
+        $scope.range = $scope.range == "" ? 10 : $scope.range;
+
         if($scope.searchQuery != ""){
             $http.get('http://maps.google.com/maps/api/geocode/json?address=' +$scope.searchQuery).success(function(mapData) {
-                //alert(JSON.stringify(mapData.results[0].geometry.location));
                 if(mapData.results.length!=0) {
                     $scope.where = mapData.results[0].geometry.location.lat + "," + mapData.results[0].geometry.location.lng;
                 }
                 else{
                     $scope.error = "Could not find entered location";
                     $scope.showErr = true;
-                    return;
-                    //alert("Could not find entered location");
                 }
+                $scope.show();
             }).error(function (error){
                 $scope.error = "Could not find entered location";
                 $scope.showErr = true;
             });
         }
-        else if($scope.searchKeyword != ""){
-            $scope.keyword = "title:"+$scope.searchKeyword;
-            $scope.sortOrder = "Relevance";
-        }
         else
         {
             $scope.where = $scope.userlat + "," + $scope.userlong;
+            $scope.show();
         }
 
-        $scope.pageNo = 1;
-        $scope.loader = true;
-        if($scope.category == null)
-            $scope.category = "";
-        if($scope.range == "")
-            $scope.range = 10;
         //alert(typeof $scope.searchQuery);
         //$scope.url = "http://api.eventful.com/json/events/search?app_key=" + $scope.apiKey + "&category=" + $scope.category.id + "&where=" + $scope.where + "&within=10&units=mi&date=Future&page_size=50&include=categories,price,links&sort_order=" + $scope.sortOrder;
         //alert($scope.url);
-        $scope.show();
-        if($scope.eventDetails.length == 0){
+
+        /*if($scope.eventDetails.length == 0){
             $scope.error = "No events found!";
             $scope.showErr = true;
             return;
-        }
+        }*/
     };
 
     $scope.more = function(){
@@ -231,8 +241,7 @@ scotchApp.controller('getLocation', function ($scope, $http, NgMap) {
                 $scope.showErr = true;
                 return;
             }
-
-            if($scope.eventData.total_items == 1){
+            else if($scope.eventData.total_items == 1){
                 var eventObj = new Object();
                 eventObj.url = $scope.eventData.events.event.url;
                 eventObj.title = $scope.eventData.events.event.title;
