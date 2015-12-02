@@ -103,13 +103,13 @@
                         on-click="clickEventInfo(event,e)">
                 </marker>
                 <info-window id="map-event" position="{{mapEvent.latitude}},{{mapEvent.longitude}}">
-                    <div ng-non-bindable="">
+                    <div ng-non-bindable="" style="width: 100%;">
                         <!--Event: {{mapEvent.title}}<br>
                         Where?: {{mapEvent.venue_name}}<br>
                         When?: {{mapEvent.start_time}}-->
                         <h4> <a> {{ mapEvent.title }} </a></h4>
-                        <div> Venue: {{ mapEvent.venue_name }} </div>
-                        <div> {{ mapEvent.start_time }} </div>
+                        <div><i class="fa fa-location-arrow"></i> &nbsp; {{ mapEvent.venue_name }} </div>
+                        <div><i class="fa fa-calendar"></i> &nbsp; {{ mapEvent.start_time  | dateInMillis | date: 'EEE, MMM dd yyyy, h:mm a'}} </div>
                         <div class="label label-success"> {{mapEvent.price}} </div>
                         <!--<div><span ng-repeat="cat in mapEvent.categories"><span class="label label-primary">{{cat.name | ampersand}}</span>   </span></div>-->
                     </div>
