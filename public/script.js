@@ -52,6 +52,7 @@ scotchApp.controller('getLocation', function ($rootScope, $scope, $http, NgMap) 
         $scope.keyword = "",
         $scope.range = 10,
         $scope.eventDetails = [],
+        $scope.origeventDetails = [],
         $scope.busy = false,
         $scope.loader = true,
         $scope.pageNo = 1,
@@ -74,9 +75,16 @@ scotchApp.controller('getLocation', function ($rootScope, $scope, $http, NgMap) 
 
     $scope.dislikeEvent = function (event) {
         if ($rootScope.isLoggedIn) {
+            console.log("Saving disliked");
             $rootScope.currentUser.dislikedEvents.push(event.id);
+            console.log($rootScope.currentUser.dislikedEvents);
         }
         else alert("Please log in");
+
+    };
+
+    $scope.changeColor = function ()
+    {
 
     };
 
@@ -108,7 +116,6 @@ scotchApp.controller('getLocation', function ($rootScope, $scope, $http, NgMap) 
     };
 
     $scope.$on("ShowCategories", function (event, args) {
-        console.log("Event triggered");
         $scope.showCategories();
     });
 
@@ -119,8 +126,6 @@ scotchApp.controller('getLocation', function ($rootScope, $scope, $http, NgMap) 
             var categoriesObj = new Object();
             $scope.category = [];
             if ($rootScope.isLoggedIn) {
-                // console.log($rootScope.currentUser);
-                //  console.log("Ctegories triggered");
                 for (var i = 0; i < $rootScope.currentUser.categories.length; i++) {
                     for (var j = 0; j < data.category.length; j++) {
                         if (data.category[j].name == $rootScope.currentUser.categories[i].name) {
@@ -135,13 +140,10 @@ scotchApp.controller('getLocation', function ($rootScope, $scope, $http, NgMap) 
                 }
                 categoriesObj.category = $scope.category;
                 $scope.categoriesData = categoriesObj;
-                console.log(JSON.stringify($scope.categoriesData));
             }
             else {
                 $scope.categoriesData = data;
-                console.log(JSON.stringify($scope.categoriesData));
             }
-            //alert(JSON.stringify($scope.categoriesData));
         }).error(function (error) {
         });
     };
@@ -314,9 +316,12 @@ scotchApp.controller('getLocation', function ($rootScope, $scope, $http, NgMap) 
         }
     };
 
+    $scope.$on("Show", function (event, args) {
+        console.log("In broadcast show!");
+        $scope.show();
+    });
+
     $scope.show = function () {
-        console.log($scope.where);
-        console.log("In show");
         $scope.showErr = false;
         //$scope.loader = true;
         $scope.visibility = true;
@@ -326,25 +331,25 @@ scotchApp.controller('getLocation', function ($rootScope, $scope, $http, NgMap) 
         //console.log($scope.url);
         $http.get($scope.url).success(function (data, status, headers, config) {
 
-            $scope.eventData = data;
-            //alert(JSON.stringify($scope.eventData));
+         $scope.eventData = data;
+         //alert(JSON.stringify($scope.eventData));
+         $scope.pageCount = $scope.eventData.page_count;
 
-            $scope.pageCount = $scope.eventData.page_count;
-
-        //  for(var i=1; i<$scope.eventData.page_count;i++)
-        //  {
-      /*  if ($rootScope.isLoggedIn)
-        {
+         if ($rootScope.isLoggedIn)
+         {
+           $scope.origeventDetails = $scope.eventDetails;
+           console.log($scope.origeventDetails);
            for (var i = 0; i < $rootScope.currentUser.dislikedEvents.length; i++)
            {
-               //console($scope.eventData.events.event.find({id: $rootScope.currentUser.dislikedEvents[i]}));
-               Flump.delete({ id: $scope.flump.id }, function() {
-                   $scope.flumps.splice($scope.flumps.indexOf($scope.flump), 1);
+               var dislikedEvent = String($rootScope.currentUser.dislikedEvents[i]);
+               $scope.eventDetails = $scope.eventDetails.filter(function(ev){
+                   return ev.id !== dislikedEvent;
                });
            }
-        }
+         }
          else {
-            */
+            $scope.eventDetails = $scope.origeventDetails;
+            console.log($scope.eventDetails);
             if($scope.eventData.events == null){
                 $scope.error = "No events found!";
                 $scope.loader = false;
@@ -354,6 +359,7 @@ scotchApp.controller('getLocation', function ($rootScope, $scope, $http, NgMap) 
             //Changed on Dec 1
             else if($scope.eventData.total_items == 1){
                 var eventObj = new Object();
+                eventObj.id = $scope.eventData.events.event.id;
                 eventObj.url = $scope.eventData.events.event.url;
                 eventObj.title = $scope.eventData.events.event.title;
                 eventObj.desc = $scope.eventData.events.event.description;
@@ -381,6 +387,7 @@ scotchApp.controller('getLocation', function ($rootScope, $scope, $http, NgMap) 
             else {
                 for (var j = 0; j < $scope.eventData.events.event.length; j++) {
                     var eventObj = new Object();
+                    eventObj.id = $scope.eventData.events.event[j].id;
                     eventObj.url = $scope.eventData.events.event[j].url;
                     eventObj.title = $scope.eventData.events.event[j].title;
                     eventObj.desc = $scope.eventData.events.event[j].description;
@@ -405,9 +412,8 @@ scotchApp.controller('getLocation', function ($rootScope, $scope, $http, NgMap) 
 
                     $scope.eventDetails.push(eventObj);
                 }
-                console.log(JSON.stringify($scope.eventDetails));
               }
-       //   }
+          }
             //alert($scope.eventDetails.length);
             $scope.busy = false;
             $scope.loader = false;
@@ -461,3 +467,4 @@ scotchApp.directive("scrollend", function() {
         });
     };
 });
+

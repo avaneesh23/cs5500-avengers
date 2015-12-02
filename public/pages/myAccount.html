@@ -4,14 +4,35 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>WHAM | MyAccount</title>
+    <script src="./script.js"></script>
+    <script src="MyService.js"></script>
 </head>
 <body>
 <div>
-    <p>Firstname:{{firstName}}</p>
+    <pre>Firstname: {{firstName}}</pre>
 
-    <p>Lastname:{{lastName}}</p>
+    <pre>Lastname: {{lastName}}</pre>
 
-    <p>Email:{{email}}</p>
+    <pre>Email: {{email}}</pre>
+<!--
+    <pre>Categories: {{categories}}</pre>
+
+    <pre>WithinRadius: {{withinRadius}}</pre>
+-->
+    <div class="container-fluid">
+    <form class="form" role="form">
+        <label ng-repeat="category in categories">
+            <input type="checkbox" name="{{category.name}}" id="{{category.name}}" ng-model="category.checked"
+                   ng-change="selectedCategories()">
+            <label for="{{category.name}}">{{category.name | ampersand}}</label>
+        </label>
+        <br/>
+        <label>Within Radius?</label>
+        <input type="text" ng-model="newUser.withinRadius"/> &nbsp; &nbsp;
+
+        <button type="button" class="btn btn-primary" ng-click="register()">Update</button>
+    </form>
+    </div>
 </div>
 </body>
 </html>

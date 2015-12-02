@@ -25,7 +25,8 @@
                    ng-change="selectedCategories()">
             <label for="{{category.name}}">{{category.name | ampersand}}</label>
         </label>
-        <label>Within Radius?</label><br/>
+        <br/>
+        <label>Within Radius?</label>
         <input type="text" ng-model="newUser.withinRadius"/><br/>
 
         <button type="button" class="btn btn-primary" ng-click="register()">Submit</button>

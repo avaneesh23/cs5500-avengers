@@ -5,8 +5,8 @@
 <body>
 <div ng-controller="getLocation" data-ng-init="init()">
     <form class="form-inline">
-        <div class="row">
 
+        <div class="row">
             <div class="col-md-6">
                 &nbsp;<label>Search:</label>
                 <input type="text" class="form-control" ng-model="searchKeyword" placeholder="Enter event keywords" style="width: 75%;">
@@ -14,17 +14,15 @@
             </div>
             <div class="col-md-6">
                 <div class="input-group" style="width: 60%">
-                    <!--<div class="input-group-addon">Location</div>-->
                     <input type="text" googleplace class="form-control" ng-model="searchQuery" placeholder="Change location">
                 </div>
-                <!--</div>
-                <div class="col-md-1">-->
-                <!--<label>Range: </label>-->
+
                 <label>Radius:</label>
                 <input type="text" class="form-control" ng-model="range" style="width: 10%">&nbsp;miles
                 <button type="button" class="btn btn-primary active" ng-click="search()" style="width: 14%;">Apply</button>
             </div>
         </div>
+
         <div class="row" style="padding-top: 1%;">
             <div class="col-md-6">
                 &nbsp;<label>Filter: </label>&nbsp;&nbsp;
@@ -80,7 +78,7 @@
                             <div style="position: absolute; top: 80px; left: 385px;">
                                 <span><a href=""><i class="fa fa-thumbs-o-up fa-2x"></i></a></span>
                                 &nbsp;&nbsp;&nbsp;
-                                <span><a href=""><i class="fa fa-thumbs-o-down fa-2x"></i></a></span>
+                                <span><a href="" ng-click="dislikeEvent(event)"><i class="fa fa-thumbs-o-down fa-2x"></i></a></span>
                             </div>
                             <div style="padding-top: 5px;"><span class="label label-success costWidth" title="{{event.price}}"> {{event.price}} </span></div>
                             <div style="width: 75%;"><span ng-repeat="cat in event.categories"><span class="label label-primary">{{cat.name | ampersand}}</span>   </span></div>

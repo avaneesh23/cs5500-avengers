@@ -26,6 +26,7 @@ scotchApp.controller("mainController", function ($scope, $location, MyService, $
             $scope.hideWelcome = true;
         }
     };
+
     $scope.login = function () {
         MyService.login($scope.user, function (res) {
             if (res == 'error') {
@@ -60,6 +61,8 @@ scotchApp.controller("mainController", function ($scope, $location, MyService, $
                         $scope.hideLogin = false;
                         $scope.hideWelcome = true;
                         $location.url("/");
+                        $rootScope.isLoggedIn = false;
+                        $scope.$broadcast("Show");
                     }
                 });
 

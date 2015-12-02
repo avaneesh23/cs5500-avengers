@@ -52,6 +52,7 @@ scotchApp.factory("MyService", function ($http, $location, $rootScope) {
     };
 
     var dislikeEvent = function (callback) {
+        console.log($rootScope.currentUser.dislikedEvents);
             $http.post("/dislikeEvent", $rootScope.currentUser)
                 .success(function (res) {
                     callback(res);
