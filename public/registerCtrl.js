@@ -1,4 +1,9 @@
-scotchApp.controller("LoginCtrl", function ($scope, $location, MyService, $rootScope) {
+scotchApp.controller("registerCtrl", function ($scope, $location, MyService, $rootScope, $filter) {
+
+        $scope.categories = $rootScope.categoriesList.category;
+        $scope.selectedCategories = function () {
+            $scope.newUser.categories = $filter('filter')($scope.categories, {checked: true});
+        };
 
         $rootScope.isLoggedIn = false;
         $scope.register = function () {
@@ -8,19 +13,6 @@ scotchApp.controller("LoginCtrl", function ($scope, $location, MyService, $rootS
                         alert("System Error")
                     }
                     else {
-
-                        //var user = {"firstname": $scope.newUser.firstname, "lastname": $scope.newUser.lastname};
-                        //MyService.login(user, function (res) {
-                        //    if (res == 'error') {
-                        //        alert("System Error")
-                        //    }
-                        //    if (res == null) {
-                        //        alert("Incorrect details")
-                        //    }
-                        //    else {
-                        //        $rootScope.isLoggedIn = true;
-                        //    }
-                        //});
                         $rootScope.isLoggedIn = true;
                         $location.url("/");
                     }

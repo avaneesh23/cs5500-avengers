@@ -33,15 +33,17 @@ app.get("/", function (req, res) {
 });
 
 var ip = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
-var port = process.env.OPENSHIFT_NODEJS_PORT || 8000;
+var port = process.env.OPENSHIFT_NODEJS_PORT || 3000;
 app.listen(port, ip);
 
 var UserProfileSchema = new mongoose.Schema({
     email: String,
     password: String,
     firstname: String,
-
-    lastname: String
+    lastname: String,
+    withinRadius: String,
+    categories: Array,
+    dislikedEvents: Array
 }, {collection: "UserProfile"});
 
 var UserProfileModel = mongoose.model("UserProfileModel", UserProfileSchema);
@@ -88,6 +90,7 @@ app.post("/logout", function (req, res) {
         }
     });
 });
+
 app.post("/login", passport.authenticate('Authentication'), function (req, res) {
     var user = req.user;
     UserProfileModel.findOne({email: user.email}, function (err, userProfile) {
@@ -120,4 +123,25 @@ app.post("/register", function (req, res) {
     });
 
 
+});
+
+app.post("/dislikeEvent", function (req, res) {
+    var newUserAuth = req.body;
+    UserProfileModel.findOne({email: newUserAuth.email}, function (err, userProfile) {
+        if (userProfile != null) {
+            userProfile.dislikedEvents = newUserAuth.dislikedEvents;
+            userProfile.save(function (err, user) {
+                if (err)
+                {
+                    res.send('error');
+                }
+                else
+                {
+                    console.log('Logging out ..');
+                    res.send('ok');
+                }
+            });
+        }
+        else res.send('Please log in');
+    })
 });

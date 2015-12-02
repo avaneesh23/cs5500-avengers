@@ -19,6 +19,15 @@
         <input type="password" ng-model="newUser.password"/><br/>
         <label>Confirm</label><br/>
         <input type="password" ng-model="newUser.confirmpassword"/><br/>
+
+        <label ng-repeat="category in categories">
+            <input type="checkbox" name="{{category.name}}" id="{{category.name}}" ng-model="category.checked"
+                   ng-change="selectedCategories()">
+            <label for="{{category.name}}">{{category.name | ampersand}}</label>
+        </label>
+        <label>Within Radius?</label><br/>
+        <input type="text" ng-model="newUser.withinRadius"/><br/>
+
         <button type="button" class="btn btn-primary" ng-click="register()">Submit</button>
     </form>
 </div>

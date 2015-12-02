@@ -7,6 +7,9 @@ scotchApp.factory("MyService", function ($http, $location, $rootScope) {
                 $rootScope.currentUser.lastname = res.lastname;
                 $rootScope.currentUser.email = res.email;
                 $rootScope.currentUser.password = res.password;
+                $rootScope.currentUser.categories = res.categories;
+                $rootScope.currentUser.withinRadius = res.withinRadius;
+                $rootScope.currentUser.dislikedEvents = res.dislikedEvents;
                 callback(res);
             })
             .error(function (res) {
@@ -17,14 +20,15 @@ scotchApp.factory("MyService", function ($http, $location, $rootScope) {
         $http.post("/register", newUser)
             .success(function (res) {
                 if (res == 'ok') {
-                    console.log("service ")
-                    console.log(newUser)
                     $http.post("/login", newUser)
                         .success(function (res) {
                             $rootScope.currentUser.firstname = newUser.firstname;
                             $rootScope.currentUser.lastname = newUser.lastname;
                             $rootScope.currentUser.email = newUser.email;
                             $rootScope.currentUser.password = newUser.password;
+                            $rootScope.currentUser.categories = res.categories;
+                            $rootScope.currentUser.withinRadius = res.withinRadius;
+                            $rootScope.currentUser.dislikedEvents = res.dislikedEvents;
                             callback(res);
                         })
                 }
@@ -47,9 +51,21 @@ scotchApp.factory("MyService", function ($http, $location, $rootScope) {
         }
     };
 
+    var dislikeEvent = function (callback) {
+            $http.post("/dislikeEvent", $rootScope.currentUser)
+                .success(function (res) {
+                    callback(res);
+                })
+                .error(function (res) {
+                    callback(null);
+                })
+    };
+
+
     return {
         login: login,
         register: register,
+        dislikeEvent:dislikeEvent,
         logout: logout,
     }
 

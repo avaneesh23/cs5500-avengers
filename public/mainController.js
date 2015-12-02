@@ -9,14 +9,14 @@ scotchApp.controller("mainController", function ($scope, $location, MyService, $
     };
 
     $scope.$watch(function () {
-        return $rootScope.isLoggedIn;
-    },
-    function(){
-        $scope.toggleAfterLogin();
-        $scope.user = $rootScope.currentUser;
-        $scope.name = $rootScope.currentUser.firstname;
-    },
-    true);
+            return $rootScope.isLoggedIn;
+        },
+        function () {
+            $scope.toggleAfterLogin();
+            $scope.user = $rootScope.currentUser;
+            $scope.name = $rootScope.currentUser.firstname;
+        },
+        true);
 
     $scope.toggleAfterLogin = function () {
         if ($rootScope.isLoggedIn) {
@@ -37,7 +37,10 @@ scotchApp.controller("mainController", function ($scope, $location, MyService, $
             else {
                 $scope.name = $rootScope.currentUser.firstname;
                 $rootScope.isLoggedIn = true;
-                $location.url("/register");
+                //   $location.url("/register");
+                $location.url("/");
+                $scope.$broadcast("ShowCategories");
+                $scope.$broadcast("Show");
             }
         })
 
@@ -50,11 +53,17 @@ scotchApp.controller("mainController", function ($scope, $location, MyService, $
             }
             else {
                 alert("Logged out");
-                $scope.hideLogin = false;
-                $scope.hideWelcome = true;
-                $location.url("/");
+                MyService.dislikeEvent(function (res) {
+                    if (res == 'error') alert('Log out error');
+                    if (res == null) alert('Seems you are not logged in');
+                    else {
+                        $scope.hideLogin = false;
+                        $scope.hideWelcome = true;
+                        $location.url("/");
+                    }
+                });
+
             }
         });
-
     }
 });

@@ -22,12 +22,16 @@ scotchApp.config(function ($routeProvider) {
         .when('/contact', {
             templateUrl: 'pages/contact.html',
             controller: 'contactController'
-        }).when('/register', {
-        templateUrl: 'pages/registerHTML.html',
-        controller: 'LoginCtrl'
-    }).when('/myaccount', {
-        templateUrl: 'pages/myAccount.html',
-        controller: 'myAccCtrl'
+        })
+
+        .when('/register', {
+            templateUrl: 'pages/registerHTML.html',
+            controller: 'registerCtrl'
+        })
+
+        .when('/myaccount', {
+            templateUrl: 'pages/myAccount.html',
+            controller: 'myAccCtrl'
     });
 });
 
@@ -40,10 +44,10 @@ scotchApp.controller('contactController', function ($scope) {
     $scope.message = 'Contact us! JK. This is just a demo.';
 });
 
-scotchApp.controller('getLocation', function ($scope, $http, NgMap) {
+scotchApp.controller('getLocation', function ($rootScope, $scope, $http, NgMap) {
 
     //google.maps.event.trigger(map, "resize");
-    $scope.gPlace,
+        $scope.gPlace,
         $scope.searchKeyword = "",
         $scope.keyword = "",
         $scope.range = 10,
@@ -67,9 +71,20 @@ scotchApp.controller('getLocation', function ($scope, $http, NgMap) {
         $scope.url = "";
     //  $scope.url = "http://api.eventful.com/json/events/search?app_key="+$scope.apiKey+"&keywords=books&location="+$scope.searchQuery+"&date=Future";
 
+
+    $scope.dislikeEvent = function (event) {
+        if ($rootScope.isLoggedIn) {
+            $rootScope.currentUser.dislikedEvents.push(event.id);
+        }
+        else alert("Please log in");
+
+    };
+
+
     $scope.init = function () {
         //google.maps.event.trigger(map, "resize");
         if (navigator.geolocation) {
+            console.log("In init");
             navigator.geolocation.getCurrentPosition($scope.showPosition, $scope.showError);
         }
         else {
@@ -80,6 +95,7 @@ scotchApp.controller('getLocation', function ($scope, $http, NgMap) {
     };
 
     $scope.showPosition = function (position) {
+        console.log("In showPosition");
         $scope.userlat = position.coords.latitude;
         $scope.userlong = position.coords.longitude;
         $scope.where = $scope.userlat + "," + $scope.userlong;
@@ -91,15 +107,42 @@ scotchApp.controller('getLocation', function ($scope, $http, NgMap) {
 
     };
 
+    $scope.$on("ShowCategories", function (event, args) {
+        console.log("Event triggered");
+        $scope.showCategories();
+    });
+
     $scope.showCategories = function () {
         $scope.visibility = true;
         $http.get($scope.categoryUrl).success(function (data, status, headers, config) {
+            $rootScope.categoriesList = data;
+            var categoriesObj = new Object();
+            $scope.category = [];
+            if ($rootScope.isLoggedIn) {
+                // console.log($rootScope.currentUser);
+                //  console.log("Ctegories triggered");
+                for (var i = 0; i < $rootScope.currentUser.categories.length; i++) {
+                    for (var j = 0; j < data.category.length; j++) {
+                        if (data.category[j].name == $rootScope.currentUser.categories[i].name) {
+                            var categoryObj = new Object();
+                            categoryObj.name = data.category[j].name;
+                            categoryObj.event_count = data.category[j].event_count;
+                            categoryObj.id = data.category[j].id;
+                            $scope.category.push(categoryObj);
+                        }
 
-            $scope.categoriesData = data;
+                    }
+                }
+                categoriesObj.category = $scope.category;
+                $scope.categoriesData = categoriesObj;
+                console.log(JSON.stringify($scope.categoriesData));
+            }
+            else {
+                $scope.categoriesData = data;
+                console.log(JSON.stringify($scope.categoriesData));
+            }
             //alert(JSON.stringify($scope.categoriesData));
         }).error(function (error) {
-            $scope.error = "Error fetching categories. Please refresh the page...";
-            $scope.showErr = true;
         });
     };
 
@@ -142,12 +185,75 @@ scotchApp.controller('getLocation', function ($scope, $http, NgMap) {
         $scope.map.hideInfoWindow('map-event');
     };
 
+/*    $scope.search = function () {
+        $scope.showSearchResults = true;
+        //alert("searching..");
+        $scope.showErr = false;
+     // $scope.eventDetails.splice(0, $scope.eventDetails.length);
+        //alert($scope.searchQuery);
+        if($scope.searchQuery != ""){
+
+            $http.get('http://maps.google.com/maps/api/geocode/json?address=' +$scope.searchQuery).success(function(mapData) {
+                console.log(JSON.stringify(mapData.results[0].geometry.location));
+
+                if(mapData.results.length!=0) {
+                    $scope.where = mapData.results[0].geometry.location.lat + "," + mapData.results[0].geometry.location.lng;
+                    console.log("In search"+$scope.where);
+                    $scope.callRequiredFunctions();
+                   // alert($scope.where);
+                }
+                else{
+                    $scope.error = "Could not find entered location";
+                    $scope.showErr = true;
+                    return;
+                    //alert("Could not find entered location");
+
+                }
+            }).error(function (error){
+                $scope.error = "Could not find entered location";
+                $scope.showErr = true;
+            });
+        }
+        else if($scope.searchKeyword != ""){
+            $scope.keyword = "title:"+$scope.searchKeyword;
+            $scope.sortOrder = "Relevance";
+            $scope.callRequiredFunctions();
+        }
+        else
+        {
+            $scope.where = $scope.userlat + "," + $scope.userlong;
+            $scope.callRequiredFunctions();
+        }
+    };
+
+
+    $scope.callRequiredFunctions = function()
+    {
+        $scope.pageNo = 1;
+        console.log("Before in show");
+        $scope.loader = true;
+        if($scope.category == null)
+            $scope.category = "";
+        if($scope.range == "")
+            $scope.range = 10;
+        //alert(typeof $scope.searchQuery);
+        //$scope.url = "http://api.eventful.com/json/events/search?app_key=" + $scope.apiKey + "&category=" + $scope.category.id + "&where=" + $scope.where + "&within=10&units=mi&date=Future&page_size=50&include=categories,price,links&sort_order=" + $scope.sortOrder;
+        //alert($scope.url);
+        $scope.show();
+        if($scope.eventDetails.length == 0){
+            $scope.error = "No events found!";
+            $scope.showErr = true;
+            return;
+        }
+    }
+*/
+
     $scope.search = function () {
         //alert("searching..");
         //alert($scope.searchKeyword);
         $scope.showErr = false;
         /*$scope.eventDetails.splice(0, $scope.eventDetails.length);
-        $scope.eventDetails.length = 0;*/
+         $scope.eventDetails.length = 0;*/
         $scope.eventDetails = [];
         debugger;
         //alert($scope.searchQuery);
@@ -188,20 +294,11 @@ scotchApp.controller('getLocation', function ($scope, $http, NgMap) {
             $scope.where = $scope.userlat + "," + $scope.userlong;
             $scope.show();
         }
-
-        //alert(typeof $scope.searchQuery);
-        //$scope.url = "http://api.eventful.com/json/events/search?app_key=" + $scope.apiKey + "&category=" + $scope.category.id + "&where=" + $scope.where + "&within=10&units=mi&date=Future&page_size=50&include=categories,price,links&sort_order=" + $scope.sortOrder;
-        //alert($scope.url);
-
-        /*if($scope.eventDetails.length == 0){
-            $scope.error = "No events found!";
-            $scope.showErr = true;
-            return;
-        }*/
     };
 
     $scope.more = function(){
         //alert($scope.pageNo + " " + $scope.pageCount);
+        console.log("In more");
         $scope.showErr = false;
         if($scope.eventDetails.length == 0){
             $scope.error = "No events found!";
@@ -218,6 +315,8 @@ scotchApp.controller('getLocation', function ($scope, $http, NgMap) {
     };
 
     $scope.show = function () {
+        console.log($scope.where);
+        console.log("In show");
         $scope.showErr = false;
         //$scope.loader = true;
         $scope.visibility = true;
@@ -231,16 +330,28 @@ scotchApp.controller('getLocation', function ($scope, $http, NgMap) {
             //alert(JSON.stringify($scope.eventData));
 
             $scope.pageCount = $scope.eventData.page_count;
-            //alert($scope.pageCount);
-            //alert($scope.eventData.events.event.length);
-            //  for(var i=1; i<$scope.eventData.page_count;i++)
-            //  {
+
+        //  for(var i=1; i<$scope.eventData.page_count;i++)
+        //  {
+      /*  if ($rootScope.isLoggedIn)
+        {
+           for (var i = 0; i < $rootScope.currentUser.dislikedEvents.length; i++)
+           {
+               //console($scope.eventData.events.event.find({id: $rootScope.currentUser.dislikedEvents[i]}));
+               Flump.delete({ id: $scope.flump.id }, function() {
+                   $scope.flumps.splice($scope.flumps.indexOf($scope.flump), 1);
+               });
+           }
+        }
+         else {
+            */
             if($scope.eventData.events == null){
                 $scope.error = "No events found!";
                 $scope.loader = false;
                 $scope.showErr = true;
                 return;
             }
+            //Changed on Dec 1
             else if($scope.eventData.total_items == 1){
                 var eventObj = new Object();
                 eventObj.url = $scope.eventData.events.event.url;
@@ -294,8 +405,9 @@ scotchApp.controller('getLocation', function ($scope, $http, NgMap) {
 
                     $scope.eventDetails.push(eventObj);
                 }
-            }
-            //  }
+                console.log(JSON.stringify($scope.eventDetails));
+              }
+       //   }
             //alert($scope.eventDetails.length);
             $scope.busy = false;
             $scope.loader = false;
