@@ -1,5 +1,14 @@
 scotchApp.factory("MyService", function ($http, $location, $rootScope) {
     $rootScope.currentUser = {"firstname": null, "lastname": null, "email": null, "password": null};
+    var update = function (user, callback) {
+        $http.post("/update", user)
+            .success(function (res) {
+                callback(res);
+            })
+            .error(function (res) {
+                callback(null);
+            })
+    };
     var login = function (user, callback) {
         $http.post("/login", user)
             .success(function (res) {
@@ -32,7 +41,7 @@ scotchApp.factory("MyService", function ($http, $location, $rootScope) {
                             callback(res);
                         })
                 }
-                else if (res == 'error'){
+                else if (res == 'error') {
                     alert("Username already registered.")
                 }
             });
@@ -51,23 +60,43 @@ scotchApp.factory("MyService", function ($http, $location, $rootScope) {
         }
     };
 
-    var dislikeEvent = function (callback) {
-        console.log($rootScope.currentUser.dislikedEvents);
-            $http.post("/dislikeEvent", $rootScope.currentUser)
-                .success(function (res) {
+    var updatePassword = function (user, oldpassword, newpassword, callback) {
+        console.log("myservice:" + oldpassword + " " + newpassword);
+        var request={};
+        request.user=user;
+        request.oldpassword=oldpassword;
+        request.newpassword=newpassword;
+        $http.post("/updatepassword", request)
+            .success(function (res) {
+                if (res == 'invalid')
+                    alert('invalid password entered');
+                else if (res == 'ok')
                     callback(res);
-                })
-                .error(function (res) {
-                    callback(null);
-                })
+            })
+            .error(function (res) {
+                callback(null)
+            })
+    };
+
+    var dislikeEvent = function (callback) {
+        $http.post("/dislikeEvent", $rootScope.currentUser)
+            .success(function (res) {
+                callback(res);
+            })
+            .error(function (res) {
+                callback(null);
+            })
     };
 
 
     return {
         login: login,
         register: register,
-        dislikeEvent:dislikeEvent,
-        logout: logout,
+        dislikeEvent: dislikeEvent,
+        update: update,
+        updatePassword: updatePassword,
+        logout: logout
+
     }
 
 });

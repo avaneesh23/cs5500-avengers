@@ -53,8 +53,6 @@ passport.use('Authentication', new LocalStrategy({
         passwordField: 'password'
     },
     function (email, password, done) {
-
-        console.log(email+" "+password)
         UserProfileModel.findOne({email: email, password: password}, function (err, user) {
             if (user != null) {
                 if (err) {
@@ -102,6 +100,7 @@ app.post("/login", passport.authenticate('Authentication'), function (req, res) 
 
 });
 
+
 app.post("/register", function (req, res) {
 
     var newUserAuth = req.body;
@@ -111,7 +110,7 @@ app.post("/register", function (req, res) {
             res.send("error");
         }
         else {
-            newUserAuthObject.save(function (err, user) {
+            newUserAuthObject.save(function (err, userProfile) {
                 if (err) {
                     res.send('error');
                 }
@@ -131,13 +130,56 @@ app.post("/dislikeEvent", function (req, res) {
         if (userProfile != null) {
             userProfile.dislikedEvents = newUserAuth.dislikedEvents;
             userProfile.save(function (err, user) {
-                if (err)
-                {
+                if (err) {
                     res.send('error');
                 }
-                else
-                {
-                    console.log('Logging out ..');
+                else {
+
+                    res.send('ok');
+                }
+            });
+        }
+        else res.send('Please log in');
+    })
+});
+
+
+app.post("/updatepassword", function (req, res) {
+    var newUserAuth = req.body.user;
+    console.log("in before server:" + req.body.oldpassword + req.body.newpassword);
+    UserProfileModel.findOne({email: newUserAuth.email}, function (err, userProfile) {
+        console.log("in server:" + req.body.oldpassword + req.body.newpassword);
+        if (userProfile != null) {
+            if (userProfile.password == req.body.oldpassword) {
+                userProfile.password = req.body.newpassword;
+                userProfile.save(function (err, user) {
+                    if (err) {
+                        res.send('error');
+                    }
+                    else {
+
+                        res.send('ok');
+                    }
+                });
+            }
+            else res.send('invalid');
+        }
+        else res.send('Please log in');
+    })
+});
+
+app.post("/update", function (req, res) {
+    var newUserAuth = req.body;
+    UserProfileModel.findOne({email: newUserAuth.email}, function (err, userProfile) {
+        if (userProfile != null) {
+            userProfile.withinRadius = newUserAuth.withinRadius;
+            userProfile.categories = newUserAuth.categories;
+            userProfile.save(function (err, user) {
+                if (err) {
+                    res.send('error');
+                }
+                else {
+
                     res.send('ok');
                 }
             });

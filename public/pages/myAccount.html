@@ -20,18 +20,22 @@
     <pre>WithinRadius: {{withinRadius}}</pre>
 -->
     <div class="container-fluid">
-    <form class="form" role="form">
-        <label ng-repeat="category in categories">
+    <div class="form" role="form">
+        <div><label ng-repeat="category in categories track by $index">
             <input type="checkbox" name="{{category.name}}" id="{{category.name}}" ng-model="category.checked"
                    ng-change="selectedCategories()">
             <label for="{{category.name}}">{{category.name | ampersand}}</label>
-        </label>
+        </label></div>
         <br/>
         <label>Within Radius?</label>
-        <input type="text" ng-model="newUser.withinRadius"/> &nbsp; &nbsp;
+        <input type="text" ng-bind="withinRadius"/> &nbsp; &nbsp;
 
-        <button type="button" class="btn btn-primary" ng-click="register()">Update</button>
+        <button type="button" class="btn btn-primary" ng-click="update()">Update</button>
     </form>
+        Old password: <input type="text" ng-model="oldpassword">
+        New password: <input type="text" ng-model="newpassword">
+        Confirm password: <input type="text" ng-model="confirmpassword">
+        <button type="button" class="btn btn-primary" ng-click="updatePassword()">Update password</button>
     </div>
 </div>
 </body>
