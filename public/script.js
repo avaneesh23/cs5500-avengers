@@ -37,11 +37,11 @@ scotchApp.config(function ($routeProvider) {
 
 
 scotchApp.controller('aboutController', function ($scope) {
-    $scope.message = 'Look! I am an about page.';
+    $scope.message = 'WHAM (What\'s Happening Around Me)';
 });
 
 scotchApp.controller('contactController', function ($scope) {
-    $scope.message = 'Contact us! JK. This is just a demo.';
+    $scope.message = 'info@msd-avengers.com';
 });
 
 scotchApp.controller('getLocation', function ($rootScope, $scope, $http, NgMap) {

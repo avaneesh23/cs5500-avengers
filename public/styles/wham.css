@@ -18,6 +18,11 @@ html,body,#map { height: 100%; }
     table-border-color-dark: turquoise;
 }
 
+.centerTable 
+{
+     margin: 0px auto; 
+	 border: 1px solid black;
+}
 
 .btn {
     border: 0 none;
