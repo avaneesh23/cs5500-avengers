@@ -191,3 +191,10 @@ html,body,#map { height: 100%; }
         -webkit-transform: rotate(360deg);
     }
 }
+
+.red{
+    color: red;
+}
+.green{
+    color: green;
+}

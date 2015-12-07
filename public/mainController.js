@@ -61,7 +61,7 @@ scotchApp.controller("mainController", function ($scope, $location, MyService, $
                 //   $location.url("/register");
                 $location.url("/");
                 $scope.$broadcast("ShowCategories");
-                $scope.$broadcast("Show");
+                $scope.$broadcast("filterEvents");
             }
         })
 

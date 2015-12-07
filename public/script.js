@@ -32,7 +32,7 @@ scotchApp.config(function ($routeProvider) {
         .when('/myaccount', {
             templateUrl: 'pages/myAccount.html',
             controller: 'myAccCtrl'
-    });
+        });
 });
 
 
@@ -47,7 +47,7 @@ scotchApp.controller('contactController', function ($scope) {
 scotchApp.controller('getLocation', function ($rootScope, $scope, $http, NgMap) {
 
     //google.maps.event.trigger(map, "resize");
-        $scope.gPlace,
+    $scope.gPlace,
         $scope.searchKeyword = "",
         $scope.keyword = "",
         $scope.range = 10,
@@ -68,6 +68,7 @@ scotchApp.controller('getLocation', function ($rootScope, $scope, $http, NgMap) 
         $scope.sortOrder = "Popularity",
         $scope.where = "",
         $scope.clickedEvent = null,
+        $scope.toggleColor = false,
         $scope.apiKey = "rcnxbzfT3dLNF3ff",
         $scope.url = "";
     //  $scope.url = "http://api.eventful.com/json/events/search?app_key="+$scope.apiKey+"&keywords=books&location="+$scope.searchQuery+"&date=Future";
@@ -77,7 +78,8 @@ scotchApp.controller('getLocation', function ($rootScope, $scope, $http, NgMap) 
         if ($rootScope.isLoggedIn) {
             console.log("Saving disliked");
             $rootScope.currentUser.dislikedEvents.push(event.id);
-           // console.log($rootScope.currentUser.dislikedEvents);
+            // console.log($rootScope.currentUser.dislikedEvents);
+            event.toggleColor = true;
         }
         else alert("Please log in");
 
@@ -131,20 +133,25 @@ scotchApp.controller('getLocation', function ($rootScope, $scope, $http, NgMap) 
             var categoriesObj = new Object();
             $scope.category = [];
             if ($rootScope.isLoggedIn) {
-                for (var i = 0; i < $rootScope.currentUser.categories.length; i++) {
-                    for (var j = 0; j < data.category.length; j++) {
-                        if (data.category[j].name == $rootScope.currentUser.categories[i].name) {
-                            var categoryObj = new Object();
-                            categoryObj.name = data.category[j].name;
-                            categoryObj.event_count = data.category[j].event_count;
-                            categoryObj.id = data.category[j].id;
-                            $scope.category.push(categoryObj);
-                        }
+                if($rootScope.currentUser.categories.length>0) {
+                    for (var i = 0; i < $rootScope.currentUser.categories.length; i++) {
+                        for (var j = 0; j < data.category.length; j++) {
+                            if (data.category[j].name == $rootScope.currentUser.categories[i].name) {
+                                var categoryObj = new Object();
+                                categoryObj.name = data.category[j].name;
+                                categoryObj.event_count = data.category[j].event_count;
+                                categoryObj.id = data.category[j].id;
+                                $scope.category.push(categoryObj);
+                            }
 
+                        }
                     }
+                    categoriesObj.category = $scope.category;
+                    $scope.categoriesData = categoriesObj;
                 }
-                categoriesObj.category = $scope.category;
-                $scope.categoriesData = categoriesObj;
+                else{
+                    $scope.categoriesData = data;
+                }
             }
             else {
                 $scope.categoriesData = data;
@@ -192,68 +199,68 @@ scotchApp.controller('getLocation', function ($rootScope, $scope, $http, NgMap) 
         $scope.map.hideInfoWindow('map-event');
     };
 
-/*    $scope.search = function () {
-        $scope.showSearchResults = true;
-        //alert("searching..");
-        $scope.showErr = false;
+    /*    $scope.search = function () {
+     $scope.showSearchResults = true;
+     //alert("searching..");
+     $scope.showErr = false;
      // $scope.eventDetails.splice(0, $scope.eventDetails.length);
-        //alert($scope.searchQuery);
-        if($scope.searchQuery != ""){
+     //alert($scope.searchQuery);
+     if($scope.searchQuery != ""){
 
-            $http.get('http://maps.google.com/maps/api/geocode/json?address=' +$scope.searchQuery).success(function(mapData) {
-                console.log(JSON.stringify(mapData.results[0].geometry.location));
+     $http.get('http://maps.google.com/maps/api/geocode/json?address=' +$scope.searchQuery).success(function(mapData) {
+     console.log(JSON.stringify(mapData.results[0].geometry.location));
 
-                if(mapData.results.length!=0) {
-                    $scope.where = mapData.results[0].geometry.location.lat + "," + mapData.results[0].geometry.location.lng;
-                    console.log("In search"+$scope.where);
-                    $scope.callRequiredFunctions();
-                   // alert($scope.where);
-                }
-                else{
-                    $scope.error = "Could not find entered location";
-                    $scope.showErr = true;
-                    return;
-                    //alert("Could not find entered location");
+     if(mapData.results.length!=0) {
+     $scope.where = mapData.results[0].geometry.location.lat + "," + mapData.results[0].geometry.location.lng;
+     console.log("In search"+$scope.where);
+     $scope.callRequiredFunctions();
+     // alert($scope.where);
+     }
+     else{
+     $scope.error = "Could not find entered location";
+     $scope.showErr = true;
+     return;
+     //alert("Could not find entered location");
 
-                }
-            }).error(function (error){
-                $scope.error = "Could not find entered location";
-                $scope.showErr = true;
-            });
-        }
-        else if($scope.searchKeyword != ""){
-            $scope.keyword = "title:"+$scope.searchKeyword;
-            $scope.sortOrder = "Relevance";
-            $scope.callRequiredFunctions();
-        }
-        else
-        {
-            $scope.where = $scope.userlat + "," + $scope.userlong;
-            $scope.callRequiredFunctions();
-        }
-    };
+     }
+     }).error(function (error){
+     $scope.error = "Could not find entered location";
+     $scope.showErr = true;
+     });
+     }
+     else if($scope.searchKeyword != ""){
+     $scope.keyword = "title:"+$scope.searchKeyword;
+     $scope.sortOrder = "Relevance";
+     $scope.callRequiredFunctions();
+     }
+     else
+     {
+     $scope.where = $scope.userlat + "," + $scope.userlong;
+     $scope.callRequiredFunctions();
+     }
+     };
 
 
-    $scope.callRequiredFunctions = function()
-    {
-        $scope.pageNo = 1;
-        console.log("Before in show");
-        $scope.loader = true;
-        if($scope.category == null)
-            $scope.category = "";
-        if($scope.range == "")
-            $scope.range = 10;
-        //alert(typeof $scope.searchQuery);
-        //$scope.url = "http://api.eventful.com/json/events/search?app_key=" + $scope.apiKey + "&category=" + $scope.category.id + "&where=" + $scope.where + "&within=10&units=mi&date=Future&page_size=50&include=categories,price,links&sort_order=" + $scope.sortOrder;
-        //alert($scope.url);
-        $scope.show();
-        if($scope.eventDetails.length == 0){
-            $scope.error = "No events found!";
-            $scope.showErr = true;
-            return;
-        }
-    }
-*/
+     $scope.callRequiredFunctions = function()
+     {
+     $scope.pageNo = 1;
+     console.log("Before in show");
+     $scope.loader = true;
+     if($scope.category == null)
+     $scope.category = "";
+     if($scope.range == "")
+     $scope.range = 10;
+     //alert(typeof $scope.searchQuery);
+     //$scope.url = "http://api.eventful.com/json/events/search?app_key=" + $scope.apiKey + "&category=" + $scope.category.id + "&where=" + $scope.where + "&within=10&units=mi&date=Future&page_size=50&include=categories,price,links&sort_order=" + $scope.sortOrder;
+     //alert($scope.url);
+     $scope.show();
+     if($scope.eventDetails.length == 0){
+     $scope.error = "No events found!";
+     $scope.showErr = true;
+     return;
+     }
+     }
+     */
 
     $scope.search = function () {
         //alert("searching..");
@@ -321,8 +328,21 @@ scotchApp.controller('getLocation', function ($rootScope, $scope, $http, NgMap) 
         }
     };
 
-    $scope.$on("Show", function (event, args) {
+    $scope.$on("filterEvents", function (event, args) {
         //console.log("In broadcast show!");
+        $scope.origeventDetails = $scope.eventDetails;
+        console.log($scope.origeventDetails);
+        for (var i = 0; i < $rootScope.currentUser.dislikedEvents.length; i++)
+        {
+            var dislikedEvent = String($rootScope.currentUser.dislikedEvents[i]);
+            $scope.eventDetails = $scope.eventDetails.filter(function(ev){
+                return ev.id !== dislikedEvent;
+            });
+        }
+        //$scope.show();
+    });
+
+    $scope.$on("Show", function (event, args) {
         $scope.show();
     });
 
@@ -336,24 +356,13 @@ scotchApp.controller('getLocation', function ($rootScope, $scope, $http, NgMap) 
         console.log($scope.url);
         $http.get($scope.url).success(function (data, status, headers, config) {
 
-         $scope.eventData = data;
-         //alert(JSON.stringify($scope.eventData));
-         $scope.pageCount = $scope.eventData.page_count;
+            $scope.eventData = data;
+            //alert(JSON.stringify($scope.eventData));
+            $scope.pageCount = $scope.eventData.page_count;
 
-         if ($rootScope.isLoggedIn)
-         {
-           $scope.origeventDetails = $scope.eventDetails;
-          console.log($scope.origeventDetails);
-           for (var i = 0; i < $rootScope.currentUser.dislikedEvents.length; i++)
-           {
-               var dislikedEvent = String($rootScope.currentUser.dislikedEvents[i]);
-               $scope.eventDetails = $scope.eventDetails.filter(function(ev){
-                   return ev.id !== dislikedEvent;
-               });
-           }
-         }
-         else {
-            $scope.eventDetails = $scope.origeventDetails;
+            /*
+             else {
+             $scope.eventDetails = $scope.origeventDetails;*/
             //console.log($scope.eventDetails);
             if($scope.eventData.events == null){
                 $scope.error = "No events found!";
@@ -379,6 +388,7 @@ scotchApp.controller('getLocation', function ($rootScope, $scope, $http, NgMap) 
                 eventObj.longitude = $scope.eventData.events.event.longitude;
                 eventObj.image = "images/default_image.png";
                 eventObj.price = "Free";
+                eventObj.ticketLink = $scope.eventData.events.event.links.link[0].url;
                 if($scope.eventData.events.event.price != null){
                     eventObj.price = "$ " + $scope.eventData.events.event.price;
                 }
@@ -407,6 +417,7 @@ scotchApp.controller('getLocation', function ($rootScope, $scope, $http, NgMap) 
                     eventObj.longitude = $scope.eventData.events.event[j].longitude;
                     eventObj.image = "images/default_image.png";
                     eventObj.price = "Free";
+                    eventObj.ticketLink = $scope.eventData.events.event[j].links.link[0].url;
                     if ($scope.eventData.events.event[j].price != null) {
                         eventObj.price = "$ " + $scope.eventData.events.event[j].price;
                     }
@@ -417,12 +428,27 @@ scotchApp.controller('getLocation', function ($rootScope, $scope, $http, NgMap) 
 
                     $scope.eventDetails.push(eventObj);
                 }
-              }
-          }
+
+                if ($rootScope.isLoggedIn)
+                {
+                    $scope.origeventDetails = $scope.eventDetails;
+                    console.log($scope.origeventDetails);
+                    for (var i = 0; i < $rootScope.currentUser.dislikedEvents.length; i++)
+                    {
+                        var dislikedEvent = String($rootScope.currentUser.dislikedEvents[i]);
+                        $scope.eventDetails = $scope.eventDetails.filter(function(ev){
+                            return ev.id !== dislikedEvent;
+                        });
+                    }
+                }
+            }
+            //}
             //alert($scope.eventDetails.length);
             $scope.busy = false;
             $scope.loader = false;
         }).error(function (error) {
+            $scope.busy = false;
+            $scope.loader = false;
             $scope.error = "Unexpected error. Could not fetch events data..";
             $scope.showErr = true;
         });

@@ -70,7 +70,7 @@
                     </td>
                     <td style="width: 78%; padding: 0px;">
                         <div style="position: relative;">
-                            <div class="titleWidth" style="padding-top: 10px; padding-bottom: 2px; font-size: larger;" title="{{event.title}}"><strong> <a href="" ng-click="showEvent(event)"> {{ event.title }} </a> </strong></div>
+                            <div class="titleWidth" style="padding-top: 10px; padding-bottom: 2px; font-size: larger;" title="{{event.title}}"><strong> <a href="{{event.url}}" target="_blank"> {{ event.title }} </a> </strong></div>
                             <div>
                                 <span class="venueWidth" title="{{event.venue_name}}"><i class="fa fa-location-arrow"></i> &nbsp; {{ event.venue_name }}</span>
                                 <span class="timeWidth" title="{{event.start_time}}"><i class="fa fa-calendar"></i> &nbsp; {{ event.start_time | dateInMillis | date: 'EEE, MMM dd yyyy, h:mm a'}}</span>
@@ -78,9 +78,9 @@
                             <div style="position: absolute; top: 80px; left: 385px;">
                                 <span><a href="" ng-click="shareonfb()"><i class="fa fa-thumbs-o-up fa-2x"></i></a></span>
                                 &nbsp;&nbsp;&nbsp;
-                                <span><a href="" ng-click="dislikeEvent(event)"><i class="fa fa-thumbs-o-down fa-2x"></i></a></span>
+                                <span><a href=""><i class="fa fa-thumbs-o-down fa-2x" ng-click="dislikeEvent(event)" ng-class="{'red' : event.toggleColor}"></i></a></span>
                             </div>
-                            <div style="padding-top: 5px;"><span class="label label-success costWidth" title="{{event.price}}"> {{event.price}} </span></div>
+                            <div style="padding-top: 5px;"><a href="{{event.ticketLink}}" target="_blank"><span class="label label-success costWidth" title="{{event.price}}"> {{event.price}} </span></a></div>
                             <div style="width: 75%;"><span ng-repeat="cat in event.categories"><span class="label label-primary">{{cat.name | ampersand}}</span>   </span></div>
                         </div>
                     </td>
@@ -105,11 +105,11 @@
                         <!--Event: {{mapEvent.title}}<br>
                         Where?: {{mapEvent.venue_name}}<br>
                         When?: {{mapEvent.start_time}}-->
-                        <h4> <a> {{ mapEvent.title }} </a></h4>
+                        <h4 class="titleWidth"> <a href="{{mapEvent.url}}" target="_blank"> {{ mapEvent.title }} </a></h4>
                         <div><i class="fa fa-location-arrow"></i> &nbsp; {{ mapEvent.venue_name }} </div>
                         <div><i class="fa fa-calendar"></i> &nbsp; {{ mapEvent.start_time  | dateInMillis | date: 'EEE, MMM dd yyyy, h:mm a'}} </div>
-                        <div class="label label-success"> {{mapEvent.price}} </div>
-                        <!--<div><span ng-repeat="cat in mapEvent.categories"><span class="label label-primary">{{cat.name | ampersand}}</span>   </span></div>-->
+                        <a href="{{mapEvent.ticketLink}}" target="_blank"><div class="label label-success">{{mapEvent.price}} </div></a>
+                        <div><span ng-repeat="cat in mapEvent.categories"><span class="label label-primary">{{cat.name | ampersand}}</span>   </span></div>
                     </div>
                 </info-window>
                 <marker position="current-location"
@@ -139,37 +139,6 @@
         <div class="ball"></div>
     </div>
 
-    <!-- <div>
-         &lt;!&ndash;Create event detail page here&ndash;&gt;
-         <table class="table">
-             <tr>
-                 <td style="width: 25%; text-align: center;">
-                     <div><img ng-src="{{clickedEvent.image}}" /></div>
-                 </td>
-                 <td style="width: 75%">
-                     <div style="position: relative;">
-                         <div style="padding-top: 10px; padding-bottom: 2px; font-size: larger;" title="{{clickedEvent.title}}"><strong> {{ clickedEvent.title }} </strong></div>
-                         <div>
-                             <span class="venueWidth" title="{{clickedEvent.venue_name}}"><i class="fa fa-location-arrow"></i> &nbsp; {{ clickedEvent.venue_name }}</span>
-                             <span title="{{clickedEvent.start_time}}"><i class="fa fa-calendar"></i> &nbsp; {{ clickedEvent.start_time | dateInMillis | date: 'EEE, MMM dd yyyy, h:mm a'}}</span>
-                         </div>
-                         <div style="padding-top: 5px;"><span class="label label-success costWidth" title="{{clickedEvent.price}}"> {{clickedEvent.price}} </span></div>
-                         <div><span ng-repeat="cat in clickedEvent.categories"><span class="label label-primary">{{cat.name | ampersand}}</span>   </span></div>
-                         <div style="position: absolute; left: 380px; top: 75px;">
-                             <span><a href=""><i class="fa fa-thumbs-o-up fa-2x"></i></a></span>
-                             &nbsp;&nbsp;&nbsp;
-                             <span><a href=""><i class="fa fa-thumbs-o-down fa-2x"></i></a></span>
-                         </div>
-                     </div>
-                 </td>
-             </tr>
-             <tr>
-                 <td colspan="2" style="text-align: center;">
-                     <div>Description: {{clickedEvent.desc}}</div>
-                 </td>
-             </tr>
-         </table>
-     </div>-->
     <!--Changed on Dec02-->
     <div style="color: lightskyblue; position: absolute; left: 17%; top: 60%;" ng-show=showErr>
         <h2>{{error}}</h2>
