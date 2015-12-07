@@ -8,15 +8,24 @@ scotchApp.controller("mainController", function ($scope, $location, MyService, $
     };
 
     $scope.sendemail = function () {
-        if($scope.user.email!=null)
-        MyService.sendemail($scope.user, function (res) {
+        if ($scope.user.email != null)
+            MyService.sendemail($scope.user, function (res) {
 
-            alert(res.toString());
-        });
+                alert(res.toString());
+            });
 
         else
-        alert('Please enter the email to retrieve your password');
+            alert('Please enter the email to retrieve your password');
     }
+
+    $scope.shareonfb = function () {
+        FB.ui({
+            method: 'share',
+            href: 'https://developers.facebook.com/docs/',
+        }, function (response) {
+        });
+
+    };
 
 
     $scope.$watch(function () {

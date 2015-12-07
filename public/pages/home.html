@@ -76,7 +76,7 @@
                                 <span class="timeWidth" title="{{event.start_time}}"><i class="fa fa-calendar"></i> &nbsp; {{ event.start_time | dateInMillis | date: 'EEE, MMM dd yyyy, h:mm a'}}</span>
                             </div>
                             <div style="position: absolute; top: 80px; left: 385px;">
-                                <span><a href=""><i class="fa fa-thumbs-o-up fa-2x"></i></a></span>
+                                <span><a href="" ng-click="shareonfb()"><i class="fa fa-thumbs-o-up fa-2x"></i></a></span>
                                 &nbsp;&nbsp;&nbsp;
                                 <span><a href="" ng-click="dislikeEvent(event)"><i class="fa fa-thumbs-o-down fa-2x"></i></a></span>
                             </div>
@@ -175,6 +175,24 @@
         <h2>{{error}}</h2>
     </div>
 
+
 </div>
+<script>
+    window.fbAsyncInit = function () {
+        FB.init({
+            appId: '100410260332059',
+            xfbml: true,
+            version: 'v2.5'
+        });
+    };
+    (function(d, s, id){
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) {return;}
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+</script>
+
 </body>
 </html>
