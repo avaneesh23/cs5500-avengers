@@ -25,8 +25,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(express.static(__dirname + '/public'));
-app.use(function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
+app.all('*', function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", '*');
     res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
@@ -39,6 +39,45 @@ app.get("/", function (req, res, next) {
     res.sendfile(__dirname + '/public/index.html');
 });
 
+var smtpTransport = nodemailer.createTransport("SMTP", {
+    service: "Gmail",
+    auth: {
+        user: "avengerswham@gmail.com",
+        pass: "msd_avengers"
+    }
+});
+
+
+app.post('/sendEmail', function (req, res) {
+    var user = req.body;
+    var password;
+    UserProfileModel.findOne({email: user.email}, function (err, userProfile) {
+        if (userProfile != null) {
+            if (err) {
+                res.send("Email is not registered with us");
+            } else {
+                //
+                password = userProfile.password;
+                var mailOptions = {
+                    to: user.email,
+                    subject: "Do Not Reply : Password Recovery",
+                    html: "Hello,<br> <br> Username: " + user.email + "<br>Password: " + password
+                };
+                smtpTransport.sendMail(mailOptions, function (error, response) {
+                    if (error) {
+                        res.send("Invalid email address");
+                    } else {
+                        res.send("Password sent to your Email!!");
+                    }
+                });
+            }
+        } else {
+            res.send("Email is not registered with us");
+        }
+    });
+
+
+})
 var ip = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
 var port = process.env.OPENSHIFT_NODEJS_PORT || 3000;
 app.listen(port, ip);
@@ -154,9 +193,9 @@ app.post("/dislikeEvent", function (req, res) {
 
 app.post("/updatepassword", function (req, res) {
     var newUserAuth = req.body.user;
-    console.log("in before server:" + req.body.oldpassword + req.body.newpassword);
+    //console.log("in before server:" + req.body.oldpassword + req.body.newpassword);
     UserProfileModel.findOne({email: newUserAuth.email}, function (err, userProfile) {
-        console.log("in server:" + req.body.oldpassword + req.body.newpassword);
+        //console.log("in server:" + req.body.oldpassword + req.body.newpassword);
         if (userProfile != null) {
             if (userProfile.password == req.body.oldpassword) {
                 userProfile.password = req.body.newpassword;

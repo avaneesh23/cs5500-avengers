@@ -2,11 +2,22 @@
  * Created by RavitejaSomisetty on 11/22/2015.
  */
 scotchApp.controller("mainController", function ($scope, $location, MyService, $rootScope) {
-
     $scope.hideWelcome = true;
     $scope.signup = function () {
         $location.url("/register");
     };
+
+    $scope.sendemail = function () {
+        if($scope.user.email!=null)
+        MyService.sendemail($scope.user, function (res) {
+
+            alert(res.toString());
+        });
+
+        else
+        alert('Please enter the email to retrieve your password');
+    }
+
 
     $scope.$watch(function () {
             return $rootScope.isLoggedIn;
@@ -69,4 +80,5 @@ scotchApp.controller("mainController", function ($scope, $location, MyService, $
             }
         });
     }
-});
+})
+;

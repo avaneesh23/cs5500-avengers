@@ -9,6 +9,16 @@ scotchApp.factory("MyService", function ($http, $location, $rootScope) {
                 callback(null);
             })
     };
+    var sendemail = function (user, callback) {
+        $http.post("/sendEmail", user)
+            .success(function (res) {
+                callback(res);
+            })
+
+            .error(function (res) {
+                callback(null);
+            })
+    };
     var login = function (user, callback) {
         $http.post("/login", user)
             .success(function (res) {
@@ -62,10 +72,10 @@ scotchApp.factory("MyService", function ($http, $location, $rootScope) {
 
     var updatePassword = function (user, oldpassword, newpassword, callback) {
         console.log("myservice:" + oldpassword + " " + newpassword);
-        var request={};
-        request.user=user;
-        request.oldpassword=oldpassword;
-        request.newpassword=newpassword;
+        var request = {};
+        request.user = user;
+        request.oldpassword = oldpassword;
+        request.newpassword = newpassword;
         $http.post("/updatepassword", request)
             .success(function (res) {
                 if (res == 'invalid')
@@ -95,6 +105,7 @@ scotchApp.factory("MyService", function ($http, $location, $rootScope) {
         dislikeEvent: dislikeEvent,
         update: update,
         updatePassword: updatePassword,
+        sendemail:sendemail,
         logout: logout
 
     }

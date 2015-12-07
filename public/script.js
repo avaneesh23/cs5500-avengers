@@ -88,11 +88,15 @@ scotchApp.controller('getLocation', function ($rootScope, $scope, $http, NgMap) 
 
     };
 
+    $scope.$on("initial", function (event, args) {
+        $scope.showCategories();
+    });
 
     $scope.init = function () {
         //google.maps.event.trigger(map, "resize");
+        console.log("In init");
         if (navigator.geolocation) {
-            //console.log("In init");
+
             navigator.geolocation.getCurrentPosition($scope.showPosition, $scope.showError);
         }
         else {
@@ -103,7 +107,7 @@ scotchApp.controller('getLocation', function ($rootScope, $scope, $http, NgMap) 
     };
 
     $scope.showPosition = function (position) {
-        //console.log("In showPosition");
+        console.log("In showPosition");
         $scope.userlat = position.coords.latitude;
         $scope.userlong = position.coords.longitude;
         $scope.where = $scope.userlat + "," + $scope.userlong;
@@ -329,7 +333,7 @@ scotchApp.controller('getLocation', function ($rootScope, $scope, $http, NgMap) 
         //$scope.eventDetails = [];
         //alert($scope.pageNo);
         $scope.url = "http://api.eventful.com/json/events/search?app_key=" + $scope.apiKey + "&keywords=" + $scope.keyword + "&category=" + $scope.category.id + "&where=" + $scope.where + "&within="+ $scope.range + "&units=mi&date=Future&page_size=10&page_number=" + $scope.pageNo + "&include=categories,price,links&sort_order=" + $scope.sortOrder;
-        //console.log($scope.url);
+        console.log($scope.url);
         $http.get($scope.url).success(function (data, status, headers, config) {
 
          $scope.eventData = data;
@@ -339,7 +343,7 @@ scotchApp.controller('getLocation', function ($rootScope, $scope, $http, NgMap) 
          if ($rootScope.isLoggedIn)
          {
            $scope.origeventDetails = $scope.eventDetails;
-          // console.log($scope.origeventDetails);
+          console.log($scope.origeventDetails);
            for (var i = 0; i < $rootScope.currentUser.dislikedEvents.length; i++)
            {
                var dislikedEvent = String($rootScope.currentUser.dislikedEvents[i]);
