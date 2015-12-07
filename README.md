@@ -17,30 +17,6 @@ Steps 5, 6 and 7 are only for the first time
 Client side code: /public
 Server side code: /server.js
 
-Videos to watch:
 
-Setup
-http://portal-cs5610online.rhcloud.com/portal/index.html#/modules/1/lectures
-
-From : 1:37:03
-https://plus.google.com/events/cf3armvkiflhg34a0k79v9252rc
-
-From 47:00
-https://plus.google.com/events/c8i32bus758m36pl3mk303ktfis
-
-Node:
-http://portal-cs5610online.rhcloud.com/portal/index.html#/modules/4
-
-https://plus.google.com/events/c2ag5h3rms3oror8b88ssq2mh7o
-
-https://plus.google.com/events/cb47806njik9gsrp0cg60e5dmmo
-
-https://plus.google.com/events/cf4al210ec4kq687e6o2fsjs5f0
-
-https://plus.google.com/events/cgei6ntufccbupnpbk22g0sf0go
-
-https://plus.google.com/events/civnkq93odn37s2masv82k6amic
-
-https://plus.google.com/events/cor39bvlamia7uid9peiira1mgk
-
-https://plus.google.com/events/c21kkrvcfqdoapitqe1chki457g
+To see the detailed auth logs on MongoDB server, change into, C:\Program Files\MongoDB\Server\3.0\bin>
+mongod --setParameter authenticationMechanisms=PLAIN --auth
