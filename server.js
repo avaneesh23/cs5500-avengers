@@ -25,10 +25,17 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(express.static(__dirname + '/public'));
+app.use(function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
+
 
 mongoose.connect(process.env.OPENSHIFT_MONGODB_DB_URL || 'mongodb://localhost/wham');
 
-app.get("/", function (req, res) {
+app.get("/", function (req, res, next) {
     res.sendfile(__dirname + '/public/index.html');
 });
 
@@ -74,7 +81,8 @@ passport.serializeUser(function (user, done) {
 passport.deserializeUser(function (user, done) {
     done(null, user);
 });
-
+app.post("/", function (req, res, next) {
+});
 app.post("/logout", function (req, res) {
     var reqUser = req.body;
     UserProfileModel.findOne({email: reqUser.email}, function (err, userProfile) {

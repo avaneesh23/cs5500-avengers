@@ -77,7 +77,7 @@ scotchApp.controller('getLocation', function ($rootScope, $scope, $http, NgMap) 
         if ($rootScope.isLoggedIn) {
             console.log("Saving disliked");
             $rootScope.currentUser.dislikedEvents.push(event.id);
-            console.log($rootScope.currentUser.dislikedEvents);
+           // console.log($rootScope.currentUser.dislikedEvents);
         }
         else alert("Please log in");
 
@@ -92,7 +92,7 @@ scotchApp.controller('getLocation', function ($rootScope, $scope, $http, NgMap) 
     $scope.init = function () {
         //google.maps.event.trigger(map, "resize");
         if (navigator.geolocation) {
-            console.log("In init");
+            //console.log("In init");
             navigator.geolocation.getCurrentPosition($scope.showPosition, $scope.showError);
         }
         else {
@@ -103,7 +103,7 @@ scotchApp.controller('getLocation', function ($rootScope, $scope, $http, NgMap) 
     };
 
     $scope.showPosition = function (position) {
-        console.log("In showPosition");
+        //console.log("In showPosition");
         $scope.userlat = position.coords.latitude;
         $scope.userlong = position.coords.longitude;
         $scope.where = $scope.userlat + "," + $scope.userlong;
@@ -123,6 +123,7 @@ scotchApp.controller('getLocation', function ($rootScope, $scope, $http, NgMap) 
         $scope.visibility = true;
         $http.get($scope.categoryUrl).success(function (data, status, headers, config) {
             $rootScope.categoriesList = data;
+
             var categoriesObj = new Object();
             $scope.category = [];
             if ($rootScope.isLoggedIn) {
@@ -257,7 +258,7 @@ scotchApp.controller('getLocation', function ($rootScope, $scope, $http, NgMap) 
         /*$scope.eventDetails.splice(0, $scope.eventDetails.length);
          $scope.eventDetails.length = 0;*/
         $scope.eventDetails = [];
-        debugger;
+        //debugger;
         //alert($scope.searchQuery);
 
         if($scope.searchKeyword != ""){
@@ -300,7 +301,7 @@ scotchApp.controller('getLocation', function ($rootScope, $scope, $http, NgMap) 
 
     $scope.more = function(){
         //alert($scope.pageNo + " " + $scope.pageCount);
-        console.log("In more");
+        //console.log("In more");
         $scope.showErr = false;
         if($scope.eventDetails.length == 0){
             $scope.error = "No events found!";
@@ -317,7 +318,7 @@ scotchApp.controller('getLocation', function ($rootScope, $scope, $http, NgMap) 
     };
 
     $scope.$on("Show", function (event, args) {
-        console.log("In broadcast show!");
+        //console.log("In broadcast show!");
         $scope.show();
     });
 
@@ -338,7 +339,7 @@ scotchApp.controller('getLocation', function ($rootScope, $scope, $http, NgMap) 
          if ($rootScope.isLoggedIn)
          {
            $scope.origeventDetails = $scope.eventDetails;
-           console.log($scope.origeventDetails);
+          // console.log($scope.origeventDetails);
            for (var i = 0; i < $rootScope.currentUser.dislikedEvents.length; i++)
            {
                var dislikedEvent = String($rootScope.currentUser.dislikedEvents[i]);
@@ -349,7 +350,7 @@ scotchApp.controller('getLocation', function ($rootScope, $scope, $http, NgMap) 
          }
          else {
             $scope.eventDetails = $scope.origeventDetails;
-            console.log($scope.eventDetails);
+            //console.log($scope.eventDetails);
             if($scope.eventData.events == null){
                 $scope.error = "No events found!";
                 $scope.loader = false;
