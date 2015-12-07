@@ -23,9 +23,8 @@
         <div class="form" role="form">
             <form>
                 <div><label ng-repeat="category in categories">
-                    <input type="checkbox" name="{{category.name}}" id="{{category.name}}" ng-model="category.checked"
-                           ng-change="selectedCategories()">
-                    <label for="{{category.name}}">{{category.name | ampersand}}</label>
+                    <input type="checkbox" name="{{category.name}}" id="{{category.id}}" ng-model="category.checked">
+                    <label for="{{category.id}}">{{category.name | ampersand}}</label>
                 </label></div>
                 <br/>
                 <label>Within Radius?</label>
@@ -43,5 +42,6 @@
             </form>
         </div>
     </div>
+</div>
 </body>
 </html>

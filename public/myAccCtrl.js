@@ -10,34 +10,35 @@ scotchApp.controller("myAccCtrl", function ($scope, $location, MyService, $rootS
 
     $scope.categories = [];
     for (var i = 0; i < $rootScope.categoriesList.category.length; i++) {
-        for (var j = 0; j < $rootScope.currentUser.categories.length; j++) {
-
-            if ($rootScope.categoriesList.category[i].id == $rootScope.currentUser.categories[j].id
-                && $rootScope.categoriesList.category[i].name == $rootScope.currentUser.categories[j].name) {
-
-                $scope.categories[i] = $rootScope.currentUser.categories[j];
-                //console.log($scope.categories[i] + "passed");
-                // $scope.categories[i].checked=($rootScope.currentUser.categories[j].checked);
-
-            }
-            else {
-                $scope.categories[i] = $rootScope.categoriesList.category[i];
-                //console.log($scope.categories[i] + "outside");
+        $rootScope.categoriesList.category[i].checked = false;
+    }
+    for (var i = 0; i < $rootScope.currentUser.categories.length; i++) {
+        for (var j = 0; j < $rootScope.categoriesList.category.length; j++) {
+            $scope.categories[j] = $rootScope.categoriesList.category[j];
+            if ($rootScope.categoriesList.category[j].id == $rootScope.currentUser.categories[i].id) {
+                $scope.categories[j].checked = true;
             }
         }
     }
-    $scope.selectedCategories = function () {
-        $rootScope.currentUser.categories = $filter('filter')($scope.categories, {checked: true});
-    }
 
     $scope.update = function () {
-
+        var selected = $filter('filter')($scope.categories, {checked: true});
+        for (var i = 0; i < selected.length; i++) {
+            var duplicate = false;
+            for (var j = 0; j < $rootScope.currentUser.categories.length; j++) {
+                if ($rootScope.currentUser.categories[j].id == selected[i].id) {
+                    duplicate = true;
+                }
+            }
+            if (!duplicate)
+                $rootScope.currentUser.categories.push(selected[i]);
+        }
         $rootScope.currentUser.withinRadius = $scope.withinRadius;
         MyService.update($rootScope.currentUser, function (res) {
             if (res == 'error')
                 alert('Update failed');
             else
-                $location.url("/myaccount");
+                alert("Update success");
         });
 
     };
