@@ -6,6 +6,15 @@
     background:lightskyblue;
 }
 
+.navbar-msd
+{
+	height: 50px;
+	padding: 15px;
+    font-size: 30px;
+    font-style: italic;
+    background:lightskyblue;
+}
+
 .navbar-fixed-top
 {
     height: 60px;
