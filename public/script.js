@@ -44,7 +44,7 @@ scotchApp.controller('contactController', function ($scope) {
     $scope.message = 'info@msd-avengers.com';
 });
 
-scotchApp.controller('getLocation', function ($rootScope, $scope, $http, NgMap) {
+scotchApp.controller('getLocation', function ($rootScope, $scope, $http, NgMap, $filter) {
 
     //google.maps.event.trigger(map, "resize");
     $scope.gPlace,
@@ -68,7 +68,8 @@ scotchApp.controller('getLocation', function ($rootScope, $scope, $http, NgMap) 
         $scope.sortOrder = "Popularity",
         $scope.where = "",
         $scope.clickedEvent = null,
-        $scope.toggleColor = false,
+        $scope.toggleDislikeColor = false,
+        $scope.toggleLikeColor = false,
         $scope.apiKey = "rcnxbzfT3dLNF3ff",
         $scope.url = "";
     //  $scope.url = "http://api.eventful.com/json/events/search?app_key="+$scope.apiKey+"&keywords=books&location="+$scope.searchQuery+"&date=Future";
@@ -78,16 +79,23 @@ scotchApp.controller('getLocation', function ($rootScope, $scope, $http, NgMap) 
         if ($rootScope.isLoggedIn) {
             console.log("Saving disliked");
             $rootScope.currentUser.dislikedEvents.push(event.id);
-            // console.log($rootScope.currentUser.dislikedEvents);
-            event.toggleColor = true;
+            console.log("disliked : " +$rootScope.currentUser.dislikedEvents);
+            event.toggleDislikeColor = true;
+            event.toggleLikeColor = false;
         }
         else alert("Please log in");
 
     };
 
-    $scope.changeColor = function ()
+    $scope.likeEvent = function (event)
     {
-
+        if ($rootScope.isLoggedIn) {
+            event.toggleLikeColor = true;
+            event.toggleDislikeColor = false;
+            $rootScope.currentUser.dislikedEvents.splice($rootScope.currentUser.dislikedEvents.indexOf(event.id),1);
+            console.log("liked : " +$rootScope.currentUser.dislikedEvents);
+        }
+        else alert("Please log in");
     };
 
     $scope.$on("initial", function (event, args) {

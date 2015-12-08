@@ -10,15 +10,19 @@
 
     <form class="form" role="form">
         <label>First name</label><br/>
-        <input type="text" ng-model="newUser.firstname"/><br/>
+        <input type="text" ng-model="newUser.firstname" required><br/>
         <label>Last name</label><br/>
-        <input type="text" ng-model="newUser.lastname"/><br/>
+        <input type="text" ng-model="newUser.lastname" required><br/>
         <label>Email</label><br/>
-        <input type="email" ng-model="newUser.email"/><br/>
+        <input type="email" ng-model="newUser.email" required><br/>
+       <!-- <div role="alert">
+            <span class="error" ng-show="form.input.$error.required"> Required! </span>
+            <span class="error" ng-show="form.input.$error.email"> Please enter a valid email address! </span>
+        </div>-->
         <label>Password</label><br/>
-        <input type="password" ng-model="newUser.password"/><br/>
+        <input type="password" ng-model="newUser.password" required><br/>
         <label>Confirm</label><br/>
-        <input type="password" ng-model="newUser.confirmpassword"/><br/>
+        <input type="password" ng-model="newUser.confirmpassword" required><br/>
 
         <label ng-repeat="category in categories">
             <input type="checkbox" name="{{category.name}}" id="{{category.name}}" ng-model="category.checked"

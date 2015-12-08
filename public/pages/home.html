@@ -75,10 +75,18 @@
                                 <span class="venueWidth" title="{{event.venue_name}}"><i class="fa fa-location-arrow"></i> &nbsp; {{ event.venue_name }}</span>
                                 <span class="timeWidth" title="{{event.start_time}}"><i class="fa fa-calendar"></i> &nbsp; {{ event.start_time | dateInMillis | date: 'EEE, MMM dd yyyy, h:mm a'}}</span>
                             </div>
+                            <span>
+                                    <div style="width: 75%;">
+                                        <a href="https://www.facebook.com/sharer/sharer.php?u={{event.url}}" title="Share on Facebook" target="_blank" class="btn btn-facebook">
+                                            <i class="fa fa-facebook">Share</i>
+                                        </a>
+                                    </div>
+                                </span>
                             <div style="position: absolute; top: 80px; left: 385px;">
-                                <span><a href="" ng-click="shareonfb()"><i class="fa fa-thumbs-o-up fa-2x"></i></a></span>
+
+                                <span><a href=""><i class="fa fa-thumbs-o-up fa-2x" ng-click="likeEvent(event)" ng-class="isLoggedIn ? {'green' : event.toggleLikeColor} : {'green' : false}"></i></a></span>
                                 &nbsp;&nbsp;&nbsp;
-                                <span><a href=""><i class="fa fa-thumbs-o-down fa-2x" ng-click="dislikeEvent(event)" ng-class="{'red' : event.toggleColor}"></i></a></span>
+                                <span><a href=""><i class="fa fa-thumbs-o-down fa-2x" ng-click="dislikeEvent(event)" ng-class="isLoggedIn ? {'red' : event.toggleDislikeColor} : {'red' : false}"></i></a></span>
                             </div>
                             <div style="padding-top: 5px;"><a href="{{event.ticketLink}}" target="_blank"><span class="label label-success costWidth" title="{{event.price}}"> {{event.price}} </span></a></div>
                             <div style="width: 75%;"><span ng-repeat="cat in event.categories"><span class="label label-primary">{{cat.name | ampersand}}</span>   </span></div>
@@ -146,6 +154,7 @@
 
 
 </div>
+
 <script>
     window.fbAsyncInit = function () {
         FB.init({
