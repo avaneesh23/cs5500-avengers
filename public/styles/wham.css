@@ -204,6 +204,20 @@ html,body,#map { height: 100%; }
 .red{
     color: red;
 }
+
 .green{
     color: green;
+}
+
+.btn-facebook {
+    background: #3b5998;
+    border-radius: 0;
+    color: #fff
+}
+.btn-facebook:link, .btn-facebook:visited {
+    color: #fff
+}
+.btn-facebook:active, .btn-facebook:hover {
+    background: #30477a;
+    color: #fff
 }
