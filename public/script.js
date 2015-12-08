@@ -396,7 +396,10 @@ scotchApp.controller('getLocation', function ($rootScope, $scope, $http, NgMap, 
                 eventObj.longitude = $scope.eventData.events.event.longitude;
                 eventObj.image = "images/default_image.png";
                 eventObj.price = "Free";
-                eventObj.ticketLink = $scope.eventData.events.event.links.link[0].url;
+                if($scope.eventData.events.event.links !=null)
+                    eventObj.ticketLink = $scope.eventData.events.event.links.link[0].url;
+                else
+                    eventObj.ticketLink = "";
                 if($scope.eventData.events.event.price != null){
                     eventObj.price = "$ " + $scope.eventData.events.event.price;
                 }
@@ -425,7 +428,10 @@ scotchApp.controller('getLocation', function ($rootScope, $scope, $http, NgMap, 
                     eventObj.longitude = $scope.eventData.events.event[j].longitude;
                     eventObj.image = "images/default_image.png";
                     eventObj.price = "Free";
-                    eventObj.ticketLink = $scope.eventData.events.event[j].links.link[0].url;
+                    if($scope.eventData.events.event.links !=null)
+                        eventObj.ticketLink = $scope.eventData.events.event[j].links.link[0].url;
+                    else
+                        eventObj.ticketLink = "";
                     if ($scope.eventData.events.event[j].price != null) {
                         eventObj.price = "$ " + $scope.eventData.events.event[j].price;
                     }
