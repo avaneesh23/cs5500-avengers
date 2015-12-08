@@ -75,14 +75,13 @@
                                 <span class="venueWidth" title="{{event.venue_name}}"><i class="fa fa-location-arrow"></i> &nbsp; {{ event.venue_name }}</span>
                                 <span class="timeWidth" title="{{event.start_time}}"><i class="fa fa-calendar"></i> &nbsp; {{ event.start_time | dateInMillis | date: 'EEE, MMM dd yyyy, h:mm a'}}</span>
                             </div>
-                            <span>
-                                    <div style="width: 75%;">
-                                        <a href="https://www.facebook.com/sharer/sharer.php?u={{event.url}}" title="Share on Facebook" target="_blank" class="btn btn-facebook">
-                                            <i class="fa fa-facebook">Share</i>
-                                        </a>
-                                    </div>
-                                </span>
-                            <div style="position: absolute; top: 80px; left: 385px;">
+
+                            <div style="position: absolute; top: 74px; left: 405px;">
+                                <a href="https://www.facebook.com/sharer/sharer.php?u={{event.url}}" title="Share on Facebook" target="_blank" class="btn">
+                                    <!--<i class="fa fa-facebook-square"></i>--><i class="fa fa-facebook-square fa-2x"></i>
+                                </a>
+                            </div>
+                            <div style="position: absolute; top: 80px; left: 330px;">
 
                                 <span><a href=""><i class="fa fa-thumbs-o-up fa-2x" ng-click="likeEvent(event)" ng-class="isLoggedIn ? {'green' : event.toggleLikeColor} : {'green' : false}"></i></a></span>
                                 &nbsp;&nbsp;&nbsp;
