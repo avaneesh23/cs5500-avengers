@@ -74,7 +74,6 @@ scotchApp.controller('getLocation', function ($rootScope, $scope, $http, NgMap, 
         $scope.url = "";
     //  $scope.url = "http://api.eventful.com/json/events/search?app_key="+$scope.apiKey+"&keywords=books&location="+$scope.searchQuery+"&date=Future";
 
-
     $scope.dislikeEvent = function (event) {
         if ($rootScope.isLoggedIn) {
             console.log("Saving disliked");
@@ -90,9 +89,12 @@ scotchApp.controller('getLocation', function ($rootScope, $scope, $http, NgMap, 
     $scope.likeEvent = function (event)
     {
         if ($rootScope.isLoggedIn) {
-            event.toggleLikeColor = true;
-            event.toggleDislikeColor = false;
-            $rootScope.currentUser.dislikedEvents.splice($rootScope.currentUser.dislikedEvents.indexOf(event.id),1);
+            //  event.toggleLikeColor = true;
+            event.toggleLikeColor = !event.toggleLikeColor;
+            if(event.toggleDislikeColor) {
+                event.toggleDislikeColor = false;
+                $rootScope.currentUser.dislikedEvents.splice($rootScope.currentUser.dislikedEvents.indexOf(event.id),1);
+            }
             console.log("liked : " +$rootScope.currentUser.dislikedEvents);
         }
         else alert("Please log in");
@@ -122,7 +124,7 @@ scotchApp.controller('getLocation', function ($rootScope, $scope, $http, NgMap, 
         $scope.userlong = position.coords.longitude;
         $scope.where = $scope.userlat + "," + $scope.userlong;
         //$scope.url = "http://api.eventful.com/json/events/search?app_key=" + $scope.apiKey + "&category=" + $scope.category.id + "&where=" + $scope.where + "&within=10&units=mi&date=Future&page_size=50&include=categories,price,links&sort_order=" + $scope.sortOrder;
-        $scope.categoryUrl = "http://api.eventful.com/json/categories/list?app_key=" + $scope.apiKey;
+        $scope.categoryUrl = "http://api.eventful.com/json/categories/list?app_key=" + $scope.apiKey +"&dataType=json&callback=JSON_CALLBACK";
         $scope.showCategories();
         $scope.show();
         $scope.$apply();
@@ -135,7 +137,7 @@ scotchApp.controller('getLocation', function ($rootScope, $scope, $http, NgMap, 
 
     $scope.showCategories = function () {
         $scope.visibility = true;
-        $http.get($scope.categoryUrl).success(function (data, status, headers, config) {
+        $http.jsonp($scope.categoryUrl).success(function (data, status, headers, config) {
             $rootScope.categoriesList = data;
 
             var categoriesObj = new Object();
@@ -360,9 +362,11 @@ scotchApp.controller('getLocation', function ($rootScope, $scope, $http, NgMap, 
         $scope.visibility = true;
         //$scope.eventDetails = [];
         //alert($scope.pageNo);
-        $scope.url = "http://api.eventful.com/json/events/search?app_key=" + $scope.apiKey + "&keywords=" + $scope.keyword + "&category=" + $scope.category.id + "&where=" + $scope.where + "&within="+ $scope.range + "&units=mi&date=Future&page_size=10&page_number=" + $scope.pageNo + "&include=categories,price,links&sort_order=" + $scope.sortOrder;
+
+        $scope.url = "http://api.eventful.com/json/events/search?app_key=" + $scope.apiKey + "&keywords=" + $scope.keyword + "&category=" + $scope.category.id + "&where=" + $scope.where + "&within="+ $scope.range + "&units=mi&date=Future&page_size=10&page_number=" + $scope.pageNo + "&include=categories,price,links&sort_order=" + $scope.sortOrder+"&dataType=json&callback=JSON_CALLBACK";
+
         console.log($scope.url);
-        $http.get($scope.url).success(function (data, status, headers, config) {
+        $http.jsonp($scope.url).success(function(data){
 
             $scope.eventData = data;
             //alert(JSON.stringify($scope.eventData));
@@ -441,6 +445,7 @@ scotchApp.controller('getLocation', function ($rootScope, $scope, $http, NgMap, 
                     eventObj.categories = $scope.eventData.events.event[j].categories.category;
 
                     $scope.eventDetails.push(eventObj);
+                    console.log(JSON.stringify($scope.eventDetails));
                 }
 
                 if ($rootScope.isLoggedIn)

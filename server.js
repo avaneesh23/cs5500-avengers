@@ -9,6 +9,17 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
+
+
+var allowCrossDomain = function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', 'http://api.eventful.com');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+
+    next();
+}
+
+
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());   //for parsing application/json
 
@@ -25,18 +36,21 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(express.static(__dirname + '/public'));
-app.all('*', function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", '*');
+app.use(allowCrossDomain);
+
+/*app.use('*', function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", "http://api.eventful.com/json/categories/list?app_key=rcnxbzfT3dLNF3ff");
     res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
 });
-
+*/
 
 mongoose.connect(process.env.OPENSHIFT_MONGODB_DB_URL || 'mongodb://localhost/wham');
 
 app.get("/", function (req, res, next) {
     res.sendfile(__dirname + '/public/index.html');
+    next();
 });
 
 var smtpTransport = nodemailer.createTransport("SMTP", {
@@ -79,7 +93,7 @@ app.post('/sendEmail', function (req, res) {
 
 })
 var ip = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
-var port = process.env.OPENSHIFT_NODEJS_PORT || 3000;
+var port = process.env.OPENSHIFT_NODEJS_PORT || 8000;
 app.listen(port, ip);
 
 var UserProfileSchema = new mongoose.Schema({
