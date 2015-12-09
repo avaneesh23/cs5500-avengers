@@ -24,6 +24,7 @@
     <script src="mainController.js"></script>
     <script src="myAccCtrl.js"></script>
     <link rel="stylesheet" type="text/css" href="./styles/wham.css">
+	<link rel="stylesheet" type="text/css" href="./styles/bootstrap.css">
 </head>
 
 <!-- define angular controller -->
@@ -47,35 +48,34 @@
                 <li class="dropdown" id="loginmenu" ng-hide="hideLogin">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#loginmenu"><b>Login</b> <span
                             class="caret"></span></a>
-                    <ul class="dropdown-menu login-dp">
+                    <ul class="dropdown-menu login-dp" style="width: 400%;">
                         <li>
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="bottom text-center">
-                                        New here ?
-                                        <button type="button" class="btn btn-primary btn-block" ng-click="signup()"><b>Join Us</b></button><br>
-                                        Old Friend?
+                                        New here ? 
+                                        <button style="width: 20%" type="button" class="btn btn-primary btn-block" ng-click="signup()"><b>Sign Up</b></button><br>
                                     </div>
 
                                     <form class="form" role="form" accept-charset="UTF-8"
                                           id="login-nav">
-                                        <div class="form-group">
+                                        <div class="form-group text-center">
                                             <input type="email" class="form-control" id="username"
                                                    ng-model="user.email" placeholder="Email address" required>
                                         </div>
-                                        <div class="form-group">
+                                        <div class="form-group text-center">
                                             <input type="password" class="form-control" id="password"
                                                    ng-model="user.password" placeholder="Password" required>
 
                                             <div class="help-block text-right"><a href="" ng-click="sendemail()">Forgot password ?</a></div>
                                         </div>
-                                        <div class="checkbox">
+                                        <div class="checkbox text-center">
                                             <label>
                                                 <input type="checkbox"> Keep me logged-in
                                             </label>
                                         </div>
-                                        <div class="form-group">
-                                            <button type="submit" class="btn btn-primary btn-block" ng-click="login()">
+                                        <div class="form-group text-center">
+                                            <button style="width: 20%" type="submit" class="btn btn-primary btn-block" ng-click="login()">
                                                 Sign in
                                             </button>
                                         </div>
