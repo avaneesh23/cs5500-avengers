@@ -73,7 +73,7 @@
                             <div class="titleWidth" style="padding-top: 10px; padding-bottom: 2px; font-size: larger;" title="{{event.title}}"><strong> <a href="{{event.url}}" target="_blank"> {{ event.title }} </a> </strong></div>
                             <div>
                                 <span class="venueWidth" title="{{event.venue_name}}"><i class="fa fa-location-arrow"></i> &nbsp; {{ event.venue_name }}</span>
-                                <span class="timeWidth" title="{{event.start_time}}"><i class="fa fa-calendar"></i> &nbsp; {{ event.start_time }}</span>
+                                <span class="timeWidth" title="{{event.start_time}}"><i class="fa fa-calendar"></i> &nbsp; {{ event.start_time | dateInMillis | date: 'EEE, MMM dd yyyy, h:mm a'}}</span>
                             </div>
 
                             <div style="position: absolute; top: 74px; left: 405px;">
