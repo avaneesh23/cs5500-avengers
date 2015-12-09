@@ -166,7 +166,7 @@ html,body,#map { height: 100%; }
 .ball {
     position: fixed;
     left: 25%;
-    top: 55%;
+    top: 60%;
     z-index: 9999;
     background-color: rgba(0,0,0,0);
     border: 5px solid rgba(0,183,229,0.9);

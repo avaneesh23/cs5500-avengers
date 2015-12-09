@@ -41,7 +41,7 @@ scotchApp.controller('aboutController', function ($scope) {
 });
 
 scotchApp.controller('contactController', function ($scope) {
-    $scope.message = 'info@msd-avengers.com';
+    $scope.message = 'avengerswham@gmail.com';
 });
 
 scotchApp.controller('getLocation', function ($rootScope, $scope, $http, NgMap, $filter) {
@@ -285,11 +285,11 @@ scotchApp.controller('getLocation', function ($rootScope, $scope, $http, NgMap, 
         if($scope.searchKeyword != ""){
             //alert("here");
             $scope.keyword = "title:"+$scope.searchKeyword;
-            $scope.sortOrder = "Relevance";
+            //$scope.sortOrder = "Relevance";
         }
         else{
             $scope.keyword = "";
-            $scope.sortOrder = "Popularity";
+            //$scope.sortOrder = "Popularity";
         }
 
         $scope.pageNo = 1;
