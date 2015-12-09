@@ -93,7 +93,7 @@ app.post('/sendEmail', function (req, res) {
 
 })
 var ip = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
-var port = process.env.OPENSHIFT_NODEJS_PORT || 8000;
+var port = process.env.OPENSHIFT_NODEJS_PORT || 3000;
 app.listen(port, ip);
 
 var UserProfileSchema = new mongoose.Schema({
