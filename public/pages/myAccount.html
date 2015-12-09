@@ -9,37 +9,48 @@
 </head>
 <body>
 <div>
-    <pre>Firstname: {{firstName}}</pre>
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-md-6">
+            <pre>Firstname: {{firstName}}</pre>
 
-    <pre>Lastname: {{lastName}}</pre>
+            <pre>Lastname: {{lastName}}</pre>
 
-    <pre>Email: {{email}}</pre>
-    <!--
-        <pre>Categories: {{categories}}</pre>
+            <pre>Email: {{email}}</pre>
 
-        <pre>WithinRadius: {{withinRadius}}</pre>
-    -->
-    <div class="container-fluid">
-        <div class="form" role="form">
-            <form>
-                <div><label ng-repeat="category in categories">
-                    <input type="checkbox" name="{{category.name}}" id="{{category.id}}" ng-model="category.checked">
-                    <label for="{{category.id}}">{{category.name | ampersand}}</label>
-                </label></div>
-                <br/>
-                <label>Within Radius?</label>
-                <input type="text" ng-model="withinRadius"/> &nbsp; &nbsp;
+            <!--
+                <pre>Categories: {{categories}}</pre>
 
-                <button type="button" class="btn btn-primary" ng-click="update()">Update</button>
-                <br/>
-                Old password: <input type="password" ng-model="oldpassword">
-                <br/>
-                New password: <input type="password" ng-model="newpassword">
-                <br/>
-                Confirm password: <input type="password" ng-model="confirmpassword">
-                <br/>
-                <button type="button" class="btn btn-primary" ng-click="updatePassword()">Update password</button>
-            </form>
+                <pre>WithinRadius: {{withinRadius}}</pre>
+            -->
+            <hr>
+            <div class="container-fluid">
+                <div class="form-horizontal" role="form">
+                    <form>
+                        <div>
+                            <label class="control-label">Preferred Categories:</label><br><br>
+                            <label ng-repeat="category in categories">
+                            <input type="checkbox" name="{{category.name}}" id="{{category.id}}" ng-model="category.checked">
+                            <label for="{{category.id}}">{{category.name | ampersand}}</label>&nbsp;&nbsp;&nbsp;
+                        </label></div>
+                        <br/>
+                        <label class="control-label">Within Radius?</label>
+                        <input type="text" ng-model="withinRadius"/> &nbsp; &nbsp;
+                        <br><br>
+                        <button type="button" class="btn btn-primary" ng-click="update()">Update</button>
+                        <br/><br>
+                        <hr>
+                        <label class="control-label">Change Password</label><br><br>
+                        Old password: <input type="password" ng-model="oldpassword">
+                        <br/><br>
+                        New password: <input type="password" ng-model="newpassword">
+                        <br/><br>
+                        Confirm password: <input type="password" ng-model="confirmpassword">
+                        <br/><br>
+                        <button type="button" class="btn btn-primary" ng-click="updatePassword()">Update password</button>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 </div>

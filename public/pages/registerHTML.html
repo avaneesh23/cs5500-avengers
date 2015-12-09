@@ -1,27 +1,103 @@
 <head>
-    <title>Sign up with WHAM</title>
+    <title>Sign up to WHAM</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
-
-
-<div class="container-fluid">
-    <h2>Register</h2>
+<div class="container">
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <form class="form-horizontal" role="form">
+                <fieldset>
+                    <div id="legend">
+                        <legend class="">Register</legend>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="fname">First Name</label>
+                        <div class="controls">
+                            <input type="text" id="fname" class="input-xlarge" ng-model="newUser.firstname" required>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="control-group">
+                        <label class="control-label" for="lname">Last Name</label>
+                        <div class="controls">
+                            <input type="text" id="lname" class="input-xlarge" ng-model="newUser.lastname" required>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="control-group">
+                        <!-- E-mail -->
+                        <label class="control-label" for="email">E-mail</label>
+                        <div class="controls">
+                            <input type="text" id="email" class="input-xlarge" ng-model="newUser.email" required>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="control-group">
+                        <!-- Password-->
+                        <label class="control-label" for="password">Password</label>
+                        <div class="controls">
+                            <input type="password" id="password" class="input-xlarge" ng-model="newUser.password" required>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="control-group">
+                        <!-- Password -->
+                        <label class="control-label" for="password_confirm">Password (Confirm)</label>
+                        <div class="controls">
+                            <input type="password" id="password_confirm" class="input-xlarge" ng-model="newUser.confirmpassword" required>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="control-group">
+                        <label class="control-label">Preferred Categories?</label><br>
+                        <label class="control-label" ng-repeat="category in categories">
+                            <input type="checkbox" class="input-xlarge" name="{{category.name}}" id="{{category.name}}" ng-model="category.checked"
+                                   ng-change="selectedCategories()">
+                            <label for="{{category.name}}">{{category.name | ampersand}}</label>&nbsp;&nbsp;&nbsp;
+                        </label>
+                    </div>
+                    <br>
+                    <div class="control-group">
+                        <label class="control-label">Within Radius?</label>
+                        <input type="text" ng-model="newUser.withinRadius" class="input-xlarge">
+                    </div>
+                    <br>
+                    <div class="control-group">
+                        <!-- Button -->
+                        <div class="controls">
+                            <button type="button" class="btn btn-primary" ng-click="register()">Register</button>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+    <!--<h2>WHAM Registeration</h2>
 
     <form class="form" role="form">
-        <label>First name</label><br/>
+        <div class="control-group">
+            <label class="control-label"  for="firstName">First name</label>
+            <div class="controls">
+                <input type="text" class="input-xlarge" id="firstName" ng-model="newUser.firstname" required>
+                <p class="help-block">Username can contain any letters or numbers, without spaces</p>
+            </div>
+        </div>
+        <label>First name</label>
         <input type="text" ng-model="newUser.firstname" required><br/>
-        <label>Last name</label><br/>
+        <label>Last name</label>
         <input type="text" ng-model="newUser.lastname" required><br/>
-        <label>Email</label><br/>
+        <label>Email</label>
         <input type="email" ng-model="newUser.email" required><br/>
-       <!-- <div role="alert">
+       &lt;!&ndash; <div role="alert">
             <span class="error" ng-show="form.input.$error.required"> Required! </span>
             <span class="error" ng-show="form.input.$error.email"> Please enter a valid email address! </span>
-        </div>-->
-        <label>Password</label><br/>
+        </div>&ndash;&gt;
+        <label>Password</label>
         <input type="password" ng-model="newUser.password" required><br/>
-        <label>Confirm</label><br/>
+        <label>Confirm</label>
         <input type="password" ng-model="newUser.confirmpassword" required><br/>
 
         <label ng-repeat="category in categories">
@@ -34,5 +110,5 @@
         <input type="text" ng-model="newUser.withinRadius"/><br/>
 
         <button type="button" class="btn btn-primary" ng-click="register()">Submit</button>
-    </form>
+    </form>-->
 </div>
